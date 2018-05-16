@@ -8,7 +8,9 @@ class Storefront extends React.Component {
   render() {
     return (
       <div className={styles.storefront}>
-        <Link href={'/p?name=shawwn-candy'}><a>Link</a></Link>
+        <Link href={'p?name=shawwn-candy'}>
+          <a>Link</a>
+        </Link>
       </div>
     );
   }

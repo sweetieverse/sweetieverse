@@ -1,10 +1,13 @@
 import React from 'react';
 
+import Title from '../../../../../../md/store_title.md';
+
 import propTypes from './prop-types';
 import defaultProps from './default-props';
 import styles from './styles.css';
 
 import { MenuIcon } from '../../../../../icons';
+import { StoreTitle } from './components';
 
 class Header extends React.Component {
   render() {
@@ -17,7 +20,8 @@ class Header extends React.Component {
           className={styles.menuButton}>
           <MenuIcon />
         </button>
-        <h1>sweetiebird</h1>
+
+        <Title components={{ p: StoreTitle }} />
       </div>
     );
   }

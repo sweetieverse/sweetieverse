@@ -19,14 +19,3 @@
     border: 0;
     cursor: pointer;
 }
-
-.header h1 {
-    color: #eee;
-    /*color: #b8b6b4;*/
-    /*color: rgb(92, 192, 169);*/
-    margin: 0 0 0 24px;
-    font-weight: 400;
-    font-size: 22px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-}

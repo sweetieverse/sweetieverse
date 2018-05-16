@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'next/router';
 
 import { Layout } from '../modules/layout/components';
 import { ProductPage } from '../modules/product/components';
@@ -13,4 +14,4 @@ const P = (props) => {
   );
 };
 
-export default P;
+export default withRouter(P);

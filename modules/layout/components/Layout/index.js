@@ -1,3 +1,3 @@
-import component from './presenter';
+import component from './container';
 
 export default component;
