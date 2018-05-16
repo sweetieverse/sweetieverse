@@ -1,0 +1,30 @@
+.productPage {
+    width: 100%;
+    padding: 30px;
+}
+
+.carousel {
+
+}
+
+.description {
+    margin: 50px 0;
+}
+
+.productPage h2, .productPage .heading {
+    color: #ffffff;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    margin-bottom: 30px;
+}
+
+.productPage .heading {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #fff;
+}
+
+.productPage p {
+    color: #cac8c6;
+}
+

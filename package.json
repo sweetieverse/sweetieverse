@@ -4,7 +4,9 @@
   "description": "the sweetieverse",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,29 @@
   "bugs": {
     "url": "https://github.com/sweetiebird/sweetieverse/issues"
   },
-  "homepage": "https://github.com/sweetiebird/sweetieverse#readme"
+  "homepage": "https://github.com/sweetiebird/sweetieverse#readme",
+  "dependencies": {
+    "@zeit/next-css": "^0.2.0",
+    "axios": "^0.18.0",
+    "next": "^6.0.2",
+    "prop-types": "^15.6.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-redux": "^5.0.7",
+    "react-slick": "^0.23.1",
+    "react-youtube": "^7.6.0",
+    "redux": "^4.0.0",
+    "redux-saga": "^0.16.0",
+    "reselect": "^3.0.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.3",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-babel": "^5.1.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-json": "^1.2.0",
+    "eslint-plugin-react": "^7.8.2",
+    "eslint-plugin-security": "^1.4.0"
+  }
 }
