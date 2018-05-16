@@ -1,1 +1,0 @@
-[sweetiebird](/s/sweetiebird)

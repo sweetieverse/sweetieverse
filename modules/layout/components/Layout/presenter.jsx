@@ -5,16 +5,30 @@ import { Menu } from '../../../nav/components';
 
 import styles from './styles.css';
 
+import { ConfigConsumer } from '../../../context';
+
 const Layout = props => (
-  <React.Fragment>
-    <Header toggleMenu={props.toggleMenu} />
+  <ConfigConsumer>
+    {config => (
+      <React.Fragment>
+        <Header
+          slug={config.slug}
+          storeName={config.storeName}
+          toggleMenu={props.toggleMenu} />
 
-    <Menu open={props.menuOpen} toggleMenu={props.toggleMenu} />
+        <Menu
+          items={config.menu}
+          slug={config.slug}
+          storeName={config.storeName}
+          open={props.menuOpen}
+          toggleMenu={props.toggleMenu} />
 
-    <div className={styles.layout}>
-      {props.children}
-    </div>
-  </React.Fragment>
+        <div className={styles.layout}>
+          {props.children}
+        </div>
+      </React.Fragment>
+    )}
+  </ConfigConsumer>
 );
 
 export default Layout;

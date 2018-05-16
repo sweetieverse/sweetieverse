@@ -1,8 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
-
-import MenuOptions from '../../../../md/menu.md';
-import StoreTitle from '../../../../md/store_title.md';
 
 import { MenuItem, MenuTitle } from './components';
 
@@ -12,7 +8,7 @@ import styles from './styles.css';
 
 class Menu extends React.Component {
   render() {
-    const { open, toggleMenu } = this.props;
+    const { open, toggleMenu, slug, storeName, items } = this.props;
 
     const className = open ? `${styles.menu} ${styles.open}` : styles.menu;
     const underlayClasses = open ? `${styles.underlay} ${styles.open}` : styles.underlay;
@@ -22,9 +18,11 @@ class Menu extends React.Component {
         <div className={underlayClasses} onClick={toggleMenu} />
 
         <div className={className}>
-          <StoreTitle components={{ p: MenuTitle }} />
+          <MenuTitle slug={slug} storeName={storeName} />
 
-          <MenuOptions components={{ a: MenuItem }} />
+          {items.map((item, idx) => (
+            <MenuItem key={`store-menu-item-${idx}`} text={item.text} link={item.link} />
+          ))}
         </div>
       </React.Fragment>
     );

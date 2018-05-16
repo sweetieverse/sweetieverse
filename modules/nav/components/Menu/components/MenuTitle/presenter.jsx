@@ -1,16 +1,13 @@
 import React from 'react';
-import Link from 'next/link';
 
 import styles from './styles.css';
 
 const MenuTitle = (props) => {
-  const { children } = props;
+  const { slug, storeName } = props;
 
   return (
     <h1 className={styles.title}>
-      <Link href={children.props.props.href}>
-        <a>{children.props.children}</a>
-      </Link>
+      <a href={slug}>{storeName}</a>
     </h1>
   );
 };
