@@ -5,11 +5,11 @@ import { Layout } from '../modules/layout/components';
 import { ProductPage } from '../modules/product/components';
 
 const P = (props) => {
-  const { url } = props;
-  console.log(Object.keys(props));
+  const { router } = props;
+
   return (
     <Layout>
-      product page
+      {router.query.name}
     </Layout>
   );
 };

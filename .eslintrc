@@ -29,6 +29,7 @@
     "no-constant-condition": "off",
     "security/detect-object-injection": "off",
     "security/detect-non-literal-fs-filename": "off",
-    "object-curly-newline": "off"
+    "object-curly-newline": "off",
+    "function-paren-newline": "off"
   }
 }

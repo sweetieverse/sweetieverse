@@ -1,0 +1,15 @@
+{
+  "ignore": [
+    "./.next",
+    "./assets",
+    "./lib",
+    "./md",
+    "./modules",
+    "./node_modules",
+    "./pages",
+    "./store"
+  ],
+  "execMap": {
+    "js": "babel-node --presets=env --plugins=babel-plugin-transform-builtin-extend,transform-runtime,transform-object-rest-spread"
+  }
+}
