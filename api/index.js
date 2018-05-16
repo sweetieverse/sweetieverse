@@ -2,6 +2,7 @@ import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import axios from 'axios';
 
 // routers
 // import router from './routes';
@@ -53,6 +54,12 @@ module.exports = () => {
   app.use(express.static(path.join(__dirname, '../assets'), {
     redirect: false,
   }));
+
+  app.get('/s/:storeName/index.json', async (req, res) => {
+    const resp = await axios.get('https://unpkg.com/@sweetiebird/subverse@0.0.3/items/index.json');
+    const { data: { sections } } = resp;
+    return res.json({ items: sections });
+  });
 
   // register route handlers
   // app.use('/api', router);

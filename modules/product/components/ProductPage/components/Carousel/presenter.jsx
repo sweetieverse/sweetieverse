@@ -20,14 +20,16 @@ class Carousel extends React.Component {
     const { images, videos } = this.props;
 
     return (
-      <Slider {...sliderSettings}>
-        {images.map((img, idx) => (
-          <Image key={`product-img-${idx}`} src={img} alt="Product image" />
-        ))}
-        {videos.map((vid, idx) => (
-          <Video key={`product-vid-${idx}`} src={vid} />
-        ))}
-      </Slider>
+      <div className={styles.carousel}>
+        <Slider {...sliderSettings}>
+          {images.map((img, idx) => (
+            <Image key={`product-img-${idx}`} src={img} alt="Product image" />
+          ))}
+          {videos.map((vid, idx) => (
+            <Video key={`product-vid-${idx}`} src={vid} />
+          ))}
+        </Slider>
+      </div>
     );
   }
 }

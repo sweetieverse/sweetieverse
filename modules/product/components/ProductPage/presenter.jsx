@@ -1,5 +1,4 @@
 import React from 'react';
-import qs from 'query-string';
 
 import { propTypes, defaultProps } from './props';
 import styles from './styles.css';
@@ -25,21 +24,9 @@ class ProductPage extends React.Component {
     saveUserPayment(user, payment, product, guid);
   }
 
-  componentDidMount() {
-    const { requestProduct, match, location } = this.props;
-    const { productId } = match.params;
-    const { search } = location;
-    const { u } = qs.parse(search);
-
-    this.setState({
-      user: u,
-    }, () => {
-      requestProduct(productId);
-    });
-  }
-
   render() {
     const { product } = this.props;
+    console.log(product);
     return (
       <div className={styles.productPage}>
         <h2>{product.title}</h2>
@@ -55,7 +42,7 @@ class ProductPage extends React.Component {
 
         <div className={styles.offerings}>
           <h3 className={styles.heading}>Offerings</h3>
-          {product.offerings !== undefined &&product.offerings.map((offering, idx) => (
+          {product.offerings !== undefined && product.offerings.map((offering, idx) => (
             <Offering
               guid={offering.guid}
               onPayment={this.saveUserPayment}

@@ -2,6 +2,7 @@ const next = require('next');
 const exp = require('express');
 const packageJson = require('package-json');
 const path = require('path');
+const axios = require('axios');
 
 let express;
 
@@ -23,6 +24,29 @@ app.prepare()
     server.use(exp.static(path.join(__dirname, './assets/css'), {
       redirect: false,
     }));
+
+    server.get('/s/:storeName/:productName', async (req, res) => {
+      const { productName, storeName } = req.params;
+
+      let queryParams = {};
+
+      try {
+        const pkgName = `sweetieverse-s-${storeName}`;
+        const pkgData = await packageJson(pkgName, {
+          fullMetadata: true,
+        });
+        const response = await axios.get('https://unpkg.com/@sweetiebird/subverse@0.0.3/items/sweettooth');
+        queryParams = {
+          ...pkgData.sweetieverse,
+          product: response.data,
+          slug: `/s/${storeName}`,
+        };
+      } catch (e) {
+        console.log(e); // todo: log this to loggly, etc
+      }
+
+      return app.render(req, res, '/product', queryParams);
+    });
 
     server.get('/s/:storeName', async (req, res) => {
       const { storeName } = req.params;

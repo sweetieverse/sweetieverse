@@ -7,7 +7,6 @@ import { requestProduct, saveUserPayment } from '../../actions';
 import presenter from './presenter';
 
 const mapStateToProps = createStructuredSelector({
-  product: selectors.getProduct,
   isFetching: selectors.getIsFetching,
 });
 

@@ -35,7 +35,7 @@ export default class Index extends React.Component {
     return (
       <ConfigProvider value={{ ...this.props, menu }}>
         <Layout>
-          <Storefront />
+          <Storefront slug={this.props.slug} />
         </Layout>
       </ConfigProvider>
     );
