@@ -14,7 +14,7 @@ const handle = app.getRequestHandler();
 if (dev) {
   express = require('./api'); // eslint-disable-line
 } else {
-  express = require('./server'); // eslint-disable-line
+  express = require('./server/index'); // eslint-disable-line
 }
 
 app.prepare()
