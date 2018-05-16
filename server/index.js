@@ -1,7 +1,22 @@
-import path from 'path';
-import express from 'express';
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
+'use strict';
+
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
+var _express = require('express');
+
+var _express2 = _interopRequireDefault(_express);
+
+var _bodyParser = require('body-parser');
+
+var _bodyParser2 = _interopRequireDefault(_bodyParser);
+
+var _cookieParser = require('cookie-parser');
+
+var _cookieParser2 = _interopRequireDefault(_cookieParser);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // routers
 // import router from './routes';
@@ -11,9 +26,9 @@ import cookieParser from 'cookie-parser';
 // express
 // ===========
 
-module.exports = () => {
+module.exports = function () {
   // instance of express
-  const app = express();
+  var app = (0, _express2.default)();
 
   // if we are on a production environment we are likely behind a proxy
   if (process.env.NODE_ENV === 'production') {
@@ -21,7 +36,7 @@ module.exports = () => {
   }
 
   // disallow OPTIONS calls
-  app.all('*', (req, res, next) => {
+  app.all('*', function (req, res, next) {
     if (req.method === 'OPTIONS') {
       res.status(409).end();
     } else {
@@ -30,28 +45,28 @@ module.exports = () => {
   });
 
   // such easy params
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({
-    extended: true,
+  app.use(_bodyParser2.default.json());
+  app.use(_bodyParser2.default.urlencoded({
+    extended: true
   }));
 
   // such easy cookies
-  app.use(cookieParser());
+  app.use((0, _cookieParser2.default)());
 
   // serve static files (html, js, css, images, etc)
-  app.use(express.static(path.join(__dirname, '../public'), {
+  app.use(_express2.default.static(_path2.default.join(__dirname, '../public'), {
     index: 'index.html',
-    redirect: false,
+    redirect: false
   }));
 
   // serve static files (html, js, css, images, etc)
-  app.use(express.static(path.join(__dirname, '../store-config'), {
-    redirect: false,
+  app.use(_express2.default.static(_path2.default.join(__dirname, '../store-config'), {
+    redirect: false
   }));
 
   // serve static files (html, js, css, images, etc)
-  app.use(express.static(path.join(__dirname, '../assets'), {
-    redirect: false,
+  app.use(_express2.default.static(_path2.default.join(__dirname, '../assets'), {
+    redirect: false
   }));
 
   // register route handlers
@@ -64,7 +79,7 @@ module.exports = () => {
   // });
 
   // handle errors - Last middleware to catch all
-  app.use((err, req, res, next) => {
+  app.use(function (err, req, res, next) {
     if (err) {
       // log the request with error noted
       console.error('ERROR - %s, %s', req.method, req.url);
@@ -73,7 +88,7 @@ module.exports = () => {
       console.error(err.stack);
 
       // determine if we want to return the error message to user
-      let errorMessage;
+      var errorMessage = void 0;
       if (process.env.NODE_ENV === 'development') {
         errorMessage = err.message;
       }

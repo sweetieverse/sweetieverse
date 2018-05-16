@@ -1,17 +1,28 @@
 const next = require('next');
+const exp = require('express');
 const packageJson = require('package-json');
 const path = require('path');
 
-const express = require('./api');
+let express;
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
+if (dev) {
+  express = require('./api'); // eslint-disable-line
+} else {
+  express = require('./server'); // eslint-disable-line
+}
+
 app.prepare()
   .then(() => {
     const server = express();
+
+    server.use(exp.static(path.join(__dirname, './assets/css'), {
+      redirect: false,
+    }));
 
     server.get('/s/:storeName', async (req, res) => {
       const { storeName } = req.params;

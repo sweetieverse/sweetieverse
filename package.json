@@ -46,7 +46,9 @@
   },
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "NODE_ENV=development babel-node --presets=env --plugins=babel-plugin-transform-builtin-extend,transform-runtime,transform-object-rest-spread index.js"
+    "build:api": "babel --presets=env --plugins=babel-plugin-transform-builtin-extend,transform-runtime,transform-object-rest-spread api --out-dir server",
+    "build": "next build && npm run build:api",
+    "start": "NODE_ENV=production node index.js"
   },
   "repository": {
     "type": "git",

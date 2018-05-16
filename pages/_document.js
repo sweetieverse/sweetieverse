@@ -15,6 +15,8 @@ export default class MyDocument extends Document {
       <html>
         <Head>
           <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet" />
+          <link rel="stylesheet" href="/normalize.css" />
+          <link rel="stylesheet" href="/base.css" />
           <link rel="stylesheet" href="/_next/static/style.css" />
         </Head>
         <body className="body">
