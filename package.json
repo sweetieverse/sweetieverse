@@ -46,7 +46,6 @@
   },
   "scripts": {
     "dev": "nodemon index.js",
-    "build": "next build",
     "start": "babel-node index.js --presets=env --plugins=babel-plugin-transform-builtin-extend,transform-runtime,transform-object-rest-spread"
   },
   "repository": {
