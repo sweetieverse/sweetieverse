@@ -44,6 +44,11 @@ module.exports = () => {
     redirect: false,
   }));
 
+  // serve static files (html, js, css, images, etc)
+  app.use(express.static(path.join(__dirname, '../store-config'), {
+    redirect: false,
+  }));
+
   // register route handlers
   app.use('/api', router);
   app.use('/users', publicRouter);

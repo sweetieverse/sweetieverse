@@ -1,0 +1,12 @@
+{
+	"items": [
+		{
+			"text": "Games",
+			"link": "/games"
+		},
+		{
+			"text": "Other",
+			"link": "/other"
+		}
+	]
+}

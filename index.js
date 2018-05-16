@@ -1,5 +1,6 @@
 const next = require('next');
 const packageJson = require('package-json');
+const path = require('path');
 
 const express = require('./api');
 
@@ -18,16 +19,20 @@ app.prepare()
       let pkgData = {};
 
       try {
-        const pkgName = `@${storeName}/subverse`;
+        const pkgName = `sweetieverse-s-${storeName}`;
         pkgData = await packageJson(pkgName, {
           fullMetadata: true,
         });
-        console.log(pkgData ? pkgData.subverse : 'none');
       } catch (e) {
         console.log(e); // todo: log this to loggly, etc
       }
 
-      return app.render(req, res, '/', req.query);
+      const queryParams = pkgData.sweetieverse ? {
+        ...pkgData.sweetieverse,
+        slug: `/s/${storeName}`,
+      } : {};
+
+      return app.render(req, res, '/', queryParams);
     });
 
     server.get('*', (req, res) => handle(req, res));
