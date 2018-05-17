@@ -7,7 +7,7 @@ const StoreTitle = (props) => {
 
   return (
     <h1 className={styles.title}>
-      <a href={slug}>{storeName}</a>
+      <a href={slug}>{slug}</a>
     </h1>
   );
 };

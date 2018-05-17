@@ -1,26 +1,18 @@
 import React from 'react';
-import axios from 'axios';
 
 import { Layout } from '../modules/layout/components';
-import { Storefront } from '../modules/storefront/components';
 
 import { ConfigProvider } from '../modules/context';
 
-export default class Index extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      menu: [],
-    };
-  }
-
+export default class Addon extends React.Component {
   static getInitialProps(context) {
+    console.log(context);
     return context.query;
   }
 
   render() {
-    const { identifier } = this.state;
-    console.log(JSON.parse(this.props.model));
+    const { identifier } = this.props;
+    console.log(identifier);
     return (
       <ConfigProvider value={{ ...this.props }}>
         <Layout>

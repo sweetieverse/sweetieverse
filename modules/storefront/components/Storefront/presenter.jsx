@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import axios from 'axios';
 
 import { propTypes, defaultProps } from './props';
 import styles from './styles.css';
@@ -11,19 +10,6 @@ class Storefront extends React.Component {
     this.state = {
       items: [],
     };
-  }
-
-  async componentDidMount() {
-    const { slug } = this.props;
-
-    try {
-      const response = await axios.get(`${slug}/index.json`);
-      const { data: { items } } = response;
-      const pageItems = items.map(item => `/${item}`);
-      this.setState({ items: pageItems });
-    } catch (e) {
-      console.log(e);
-    }
   }
 
   render() {

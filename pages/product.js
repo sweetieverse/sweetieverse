@@ -13,12 +13,12 @@ export default class Product extends React.Component {
   }
 
   render() {
-    const { product } = this.props;
-    console.log(product);
+    const { identifier } = this.props;
+    console.log(identifier);
     return (
       <ConfigProvider value={{ ...this.props }}>
         <Layout>
-          <ProductPage product={product} />
+          {identifier}
         </Layout>
       </ConfigProvider>
     );

@@ -25,21 +25,42 @@ app.prepare()
       redirect: false,
     }));
 
+    server.get('/s/:storeName/:productName/:addon', async (req, res) => {
+      const { productName, storeName, addon } = req.params;
+
+      let queryParams = {};
+
+      try {
+        const pkgName = `${storeName}-${productName}-${addon}`;
+        const pkgData = await packageJson(pkgName, {
+          fullMetadata: true,
+        });
+        queryParams = {
+          ...pkgData.sweetieverse,
+          identifier: pkgData.name,
+          slug: `/s/${storeName}/${productName}/${addon}`,
+        };
+      } catch (e) {
+        console.log(e); // todo: log this to loggly, etc
+      }
+
+      return app.render(req, res, '/addon', queryParams);
+    });
+
     server.get('/s/:storeName/:productName', async (req, res) => {
       const { productName, storeName } = req.params;
 
       let queryParams = {};
 
       try {
-        const pkgName = `sweetieverse-s-${storeName}`;
+        const pkgName = `${storeName}-${productName}`;
         const pkgData = await packageJson(pkgName, {
           fullMetadata: true,
         });
-        const response = await axios.get('https://unpkg.com/@sweetiebird/subverse@0.0.3/items/sweettooth');
         queryParams = {
           ...pkgData.sweetieverse,
-          product: response.data,
-          slug: `/s/${storeName}`,
+          identifier: pkgData.name,
+          slug: `/s/${storeName}/${productName}`,
         };
       } catch (e) {
         console.log(e); // todo: log this to loggly, etc
@@ -52,19 +73,24 @@ app.prepare()
       const { storeName } = req.params;
 
       let pkgData = {};
+      let xml = '';
 
       try {
-        const pkgName = `sweetieverse-s-${storeName}`;
-        pkgData = await packageJson(pkgName, {
+        pkgData = await packageJson(storeName, {
           fullMetadata: true,
         });
+        const modelUrl = pkgData.sweetieverse.model;
+        const { data } = await axios.get(modelUrl);
+        xml = JSON.stringify(data);
       } catch (e) {
         console.log(e); // todo: log this to loggly, etc
       }
 
       const queryParams = pkgData.sweetieverse ? {
         ...pkgData.sweetieverse,
+        identifier: pkgData.name,
         slug: `/s/${storeName}`,
+        model: xml,
       } : {};
 
       return app.render(req, res, '/', queryParams);
