@@ -20,7 +20,6 @@ export default class Index extends React.Component {
 
   render() {
     const { identifier } = this.state;
-    console.log(JSON.parse(this.props.model));
     return (
       <ConfigProvider value={{ ...this.props }}>
         <Layout>
