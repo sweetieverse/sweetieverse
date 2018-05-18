@@ -4,9 +4,8 @@ export const name = 'tables';
 
 const firstTable = {
   id: '$',
-  rotation: new Float32Array(4),
-  position: new Float32Array(3),
-  scale: new Float32Array(3),
+  posX: 0,
+  rotX: 0,
 };
 
 const initialState = {
@@ -23,24 +22,20 @@ const initialState = {
   balls: {
     $: {
       cue: {
-        rotation: new Float32Array(4),
-        position: new Float32Array(3),
-        scale: new Float32Array(3),
+        posX: 0,
+        rotX: 0,
       },
       1: {
-        rotation: new Float32Array(4),
-        position: new Float32Array(3),
-        scale: new Float32Array(3),
+        posX: 0,
+        rotX: 0,
       },
       2: {
-        rotation: new Float32Array(4),
-        position: new Float32Array(3),
-        scale: new Float32Array(3),
+        posX: 0,
+        rotX: 0,
       },
       8: {
-        rotation: new Float32Array(4),
-        position: new Float32Array(3),
-        scale: new Float32Array(3),
+        posX: 0,
+        rotX: 0,
       },
     },
   },
@@ -56,6 +51,19 @@ const initialState = {
 
 export function reducer(state = initialState, action) {
   switch (action.type) {
+    case constants.UPDATE_TABLE_POSE:
+      return {
+        ...state,
+        tables: {
+          ...state.tables,
+          [action.payload.tableId]: {
+            ...state.tables[action.payload.tableId],
+            posX: action.payload.posX,
+            rotX: action.payload.rotX,
+          },
+        },
+      };
+
     default:
       return state;
   }

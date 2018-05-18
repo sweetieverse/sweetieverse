@@ -11,7 +11,7 @@ import * as constants from './constants';
  *
  *  Calls the appropriate action, given the api call response
  */
-function* requestProducts() {
+function* updateTable() {
   try {
     const response = yield call(api.requestProducts);
 

@@ -6,6 +6,10 @@ export const REQUEST_PLAYER_BET = '@tables/REQUEST_PLAYER_BET';
 export const PLAYER_BET_SUCCESS = '@tables/PLAYER_BET_SUCCESS';
 export const PLAYER_BET_FAILURE = '@tables/PLAYER_BET_FAILURE';
 
+export const REQUEST_BUY_ROUND = '@tables/REQUEST_BUY_ROUND';
+export const BUY_ROUND_SUCCESS = '@tables/BUY_ROUND_SUCCESS';
+export const BUY_ROUND_FAILURE = '@tables/BUY_ROUND_FAILURE';
+
 // bet, call, fold, check, send gift request/success/failure, buy gift request/succ/fail
 
 /*
