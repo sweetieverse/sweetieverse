@@ -180,6 +180,18 @@ function init(container) {
   }
 }
 
+// logs its childses
+class ComponentWithChildren extends React.Component {
+  render() {
+    const { children } = this.props;
+    console.log(children);
+    return (
+      <div>{children}</div>
+    );
+  }
+}
+
+// renders the game
 export default class Game extends React.Component {
   constructor(props) {
     super(props);
@@ -202,7 +214,17 @@ export default class Game extends React.Component {
 
   render() {
     return (
-      <div ref={this.setRef} />
+      <React.Fragment>
+        {/* renders the cube and stuff */}
+        <div ref={this.setRef} />
+
+        {/* logs its children json tree to the console */}
+        <ComponentWithChildren>
+          <div className="test-div">
+            <p>Game</p>
+          </div>
+        </ComponentWithChildren>
+      </React.Fragment>
     );
   }
 }
