@@ -28,6 +28,24 @@ let geometry;
 const fovMAX = 160;
 const fovMIN = 1;
 
+const controllerMeshes = [null, null];
+
+const _updateControllers = () => {
+  if (navigator) {
+    const gamepads = navigator.getGamepads();
+    console.dir(gamepads);
+    for (let i = 0; i < gamepads.length; i++) {
+      const gamepad = gamepads[i];
+      if (gamepad) {
+        const controllerMesh = controllerMeshes[i];
+        controllerMesh.position.fromArray(gamepad.pose.position);
+        controllerMesh.quaternion.fromArray(gamepad.pose.orientation);
+        controllerMesh.updateMatrixWorld();
+      }
+    }
+  }
+};
+
 function addCube(material) {
   const cube = new THREE.Mesh(geometry, material);
   cube.position.set(0, 0, 0);
@@ -41,7 +59,7 @@ function addImage(path) {
     .load(path, (image) => {
       const texture = new THREE.CanvasTexture(image);
       const material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
-      addCube(material);
+      // addCube(material);
     });
 }
 
@@ -145,11 +163,11 @@ function animate() {
   group.rotation.x += (targetRotationY - group.rotation.x) * 0.05;
   renderer.render(scene, camera);
   camera.updateProjectionMatrix();
+  _updateControllers();
   requestAnimationFrame(animate);
 }
 
 function initControllerMeshes() {
-  const controllerMeshes = [null, null];
   for (let i = 0; i < controllerMeshes.length; i++) {
     const controllerMesh = new THREE.Object3D();
     controllerMesh.position.set(i === 0 ? -0.1 : 0.1, 0, 0);
