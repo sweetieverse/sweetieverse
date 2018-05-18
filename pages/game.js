@@ -1,5 +1,6 @@
 import React from 'react';
 import { throttle } from 'lodash';
+import util from 'util';
 
 import projectsImg from '../assets/images/projects.png';
 import viveObj from '../mixedreality/entities/vive-controller/vr_controller_vive_1_5.obj';
@@ -31,7 +32,6 @@ const fovMIN = 1;
 
 const controllerMeshes = [null, null];
 let debouncer;
-let util = require('util');
 
 const _updateControllers = () => {
   if (navigator) {
