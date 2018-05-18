@@ -1,4 +1,5 @@
 import React from 'react';
+import { throttle } from 'lodash';
 
 import projectsImg from '../assets/images/projects.png';
 import viveObj from '../mixedreality/entities/vive-controller/vr_controller_vive_1_5.obj';
@@ -29,11 +30,24 @@ const fovMAX = 160;
 const fovMIN = 1;
 
 const controllerMeshes = [null, null];
+let debouncer;
+let util = require('util');
 
 const _updateControllers = () => {
   if (navigator) {
     const gamepads = navigator.getGamepads();
-    console.dir(gamepads);
+
+    /* eslint-disable */
+    function logGamepads() {
+      console.log(util.inspect(gamepads, {showHidden: false, depth: null}));
+    }
+
+    if (!debouncer) {
+      debouncer = throttle(logGamepads, 500);
+    }
+
+    debouncer();
+
     for (let i = 0; i < gamepads.length; i++) {
       const gamepad = gamepads[i];
       if (gamepad) {
@@ -59,7 +73,7 @@ function addImage(path) {
     .load(path, (image) => {
       const texture = new THREE.CanvasTexture(image);
       const material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
-      // addCube(material);
+      addCube(material);
     });
 }
 
@@ -83,7 +97,6 @@ function onDocumentKeyDown(evt) {
           const rightEye = display.getEyeParameters('right');
           canvas.width = Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2;
           canvas.height = Math.max(leftEye.renderHeight, rightEye.renderHeight);
-          console.log('am i presenting meow?');
         });
       }
     });
