@@ -1,130 +1,105 @@
 import React from 'react';
-import * as THREE from 'three';
 import { isEqual } from 'lodash';
 
+import { MRControllers } from '..';
+
 import { propTypes, defaultProps } from './props';
-import styles from './styles.css';
 
-/*
-async function initControllerMeshes(controllerMeshes) {
-  const meshesClone = [...controllerMeshes];
+const THREE = global.window ? window.THREE : null;
 
-  for (let i = 0; i < controllerMeshes.length; i++) {
-    const controllerMesh = new THREE.Object3D();
-    controllerMesh.position.set(i === 0 ? -0.1 : 0.1, 0, 0);
-    controllerMesh.quaternion.setFromUnitVectors(
-      new THREE.Vector3(0, 0, -1),
-      new THREE.Vector3(0, -1, -1),
-    );
+const windowWidth = global.window ? window.innerWidth : 200;
+const windowHeight = global.window ? window.innerHeight : 200;
 
-    controllerMesh.lastGrabbed = false;
-
-    meshesClone[i] = controllerMesh;
-  }
-
-  const controllerMeshLoader = new THREE.OBJLoader();
-  controllerMeshLoader.setPath('/entities/vive-controller/');
-
-  const object = await controllerMeshLoader.load('vr_controller_vive_1_5.obj');
-
-  const textureLoader = new THREE.TextureLoader();
-  textureLoader.setPath('/entities/vive-controller/');
-
-  const controllerMesh = object.children[0];
-  controllerMesh.material.map = textureLoader.load('onepointfive_texture.png');
-  controllerMesh.material.specularMap = textureLoader.load('onepointfive_spec.png');
-
-  meshesClone[0].add(object.clone());
-  meshesClone[1].add(object.clone());
-  // controllerMeshLoader.load('vr_controller_vive_1_5.obj', (object) => {
-  //   const textureLoader = new THREE.TextureLoader();
-  //   textureLoader.setPath('/entities/vive-controller/');
-  //
-  //   const controllerMesh = object.children[0];
-  //   controllerMesh.material.map = textureLoader.load('onepointfive_texture.png');
-  //   controllerMesh.material.specularMap = textureLoader.load('onepointfive_spec.png');
-  //
-  //   meshesClone[0].add(object.clone());
-  //   meshesClone[1].add(object.clone());
-  // });
-}
-*/
-
-class MRControllers extends React.Component {
+class CanvasScene extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       gamepads: [],
+      inited: false,
     };
-    this.controllerMeshes = [null, null];
+    this.canvas = null;
+    this.scene = null;
+    this.camera = null;
+    this.renderer = null;
+    this.fov = null;
     this.rafId = null; // store the raf id if cancel() is needed later
+    this.animate = this.animate.bind(this);
   }
 
-  componentDidMount() {
-    const { scene } = this.props;
-
-    for (let i = 0; i < this.controllerMeshes.length; i++) {
-      const controllerMesh = new THREE.Object3D();
-      controllerMesh.position.set(i === 0 ? -0.1 : 0.1, 0, 0);
-      controllerMesh.quaternion.setFromUnitVectors(
-        new THREE.Vector3(0, 0, -1),
-        new THREE.Vector3(0, -1, -1),
-      );
-
-      controllerMesh.lastGrabbed = false;
-
-      scene.add(controllerMesh);
-      this.controllerMeshes[i] = controllerMesh;
+  setCanvasRef(el) {
+    if (el && global.window) {
+      this.canvasRef = el;
+      this.initScene();
+      this.animate();
     }
+  }
 
-    const controllerMeshLoader = new THREE.OBJLoader();
-    controllerMeshLoader.setPath('/entities/vive-controller/');
-    controllerMeshLoader.load('vr_controller_vive_1_5.obj', (object) => {
-      const textureLoader = new THREE.TextureLoader();
-      textureLoader.setPath('/entities/vive-controller/');
+  handlePresentVr() {
+    if (global.navigator && navigator.getVRDisplays) {
+      console.log('getting displays');
+      navigator.getVRDisplays().then((displays) => {
+        if (displays.length > 0) {
+          const display = displays[0];
+          const canvas = this.renderer.domElement;
+          if (canvas) {
+            display.requestPresent([{ source: canvas }]).then(() => {
+              this.renderer.vr.enabled = true;
+              this.renderer.vr.setDevice(display);
+              const leftEye = display.getEyeParameters('left');
+              const rightEye = display.getEyeParameters('right');
+              canvas.width = Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2;
+              canvas.height = Math.max(leftEye.renderHeight, rightEye.renderHeight);
+            });
+          }
+        }
+      });
+      navigator.getVRDisplays = null;
+    }
+  }
 
-      const controllerMesh = object.children[0];
-      controllerMesh.material.map = textureLoader.load('onepointfive_texture.png');
-      controllerMesh.material.specularMap = textureLoader.load('onepointfive_spec.png');
-
-      this.controllerMeshes[0].add(object.clone());
-      this.controllerMeshes[1].add(object.clone());
-
-      this.rafId = requestAnimationFrame(this.updateControllers);
+  initScene() {
+    if (!THREE) return;
+    this.camera = new THREE.PerspectiveCamera(30, windowWidth / windowHeight, 1, 1500);
+    this.camera.position.set(0, 4, 7);
+    this.camera.lookAt(new THREE.Vector3());
+    this.fov = this.camera.fov;
+    this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color(0x3B3961);
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      canvas: this.canvasRef,
     });
+    this.renderer.setPixelRatio(global.window ? window.devicePixelRatio : 1);
+    this.renderer.setSize(800, 800);
   }
 
-  updateControllers() {
-    if (navigator) {
-      const gamepads = navigator.getGamepads();
-
-      if (!isEqual(this.state.gamepads, gamepads)) {
-        this.setState({ gamepads });
-      }
-    }
-
-    this.rafId = requestAnimationFrame(this.updateControllers);
+  animate() {
+    this.renderer.state.reset();
+    this.camera.fov = this.fov;
+    this.renderer.render(this.scene, this.camera);
+    this.camera.updateProjectionMatrix();
+    requestAnimationFrame(this.animate);
   }
 
   render() {
-    for (let i = 0; i < this.state.gamepads.length; i++) {
-      const gamepad = this.state.gamepads[i];
-      if (gamepad) {
-        const controllerMesh = this.controllerMeshes[i];
-        controllerMesh.position.fromArray(gamepad.pose.position);
-        controllerMesh.quaternion.fromArray(gamepad.pose.orientation);
-        controllerMesh.updateMatrixWorld();
-      }
-    }
+    this.handlePresentVr();
 
     return (
-      <React.Fragment />
+      <React.Fragment>
+        <canvas
+          ref={this.setCanvasRef.bind(this)}
+          width={200}
+          height={200}
+          onClick={this.handlePresentVr.bind(this)} />
+        <MRControllers scene={this.scene} />
+      </React.Fragment>
     );
   }
 }
 
-MRControllers.propTypes = propTypes;
+CanvasScene.propTypes = propTypes;
 
-MRControllers.defaultProps = defaultProps;
+CanvasScene.defaultProps = defaultProps;
 
-export default MRControllers;
+export default CanvasScene;

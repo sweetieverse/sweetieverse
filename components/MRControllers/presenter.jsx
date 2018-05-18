@@ -1,9 +1,9 @@
 import React from 'react';
-import * as THREE from 'three';
 import { isEqual } from 'lodash';
 
 import { propTypes, defaultProps } from './props';
-import styles from './styles.css';
+
+const THREE = global.window ? window.THREE : {};
 
 /*
 async function initControllerMeshes(controllerMeshes) {
@@ -63,6 +63,10 @@ class MRControllers extends React.Component {
   componentDidMount() {
     const { scene } = this.props;
 
+    const me = this;
+
+    if (!global.window || !scene) return;
+
     for (let i = 0; i < this.controllerMeshes.length; i++) {
       const controllerMesh = new THREE.Object3D();
       controllerMesh.position.set(i === 0 ? -0.1 : 0.1, 0, 0);
@@ -90,8 +94,12 @@ class MRControllers extends React.Component {
       this.controllerMeshes[0].add(object.clone());
       this.controllerMeshes[1].add(object.clone());
 
-      this.rafId = requestAnimationFrame(this.updateControllers);
+      me.updateControllers();
     });
+  }
+
+  componentWillReceiveProps(nextProps, nextState) {
+    console.log(this.props, nextProps);
   }
 
   updateControllers() {
@@ -117,9 +125,7 @@ class MRControllers extends React.Component {
       }
     }
 
-    return (
-      <React.Fragment />
-    );
+    return null;
   }
 }
 
