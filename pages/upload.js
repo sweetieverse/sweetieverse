@@ -27,6 +27,7 @@ export default class Uploader extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.uploadFile = this.uploadFile.bind(this);
     this.login = this.login.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   uploadFile(evt) {
@@ -39,6 +40,8 @@ export default class Uploader extends React.Component {
         readerResult: reader.result,
         mimeType: type,
         uploadFile: upload,
+      }, () => {
+        console.log(upload);
       });
     }, false);
     if (upload) {
@@ -57,7 +60,6 @@ export default class Uploader extends React.Component {
     const options = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `bearer ${token}`,
       },
     };
     const response = await axios.post('https://registry.webmr.io/l', {
@@ -74,6 +76,16 @@ export default class Uploader extends React.Component {
     });
   }
 
+  async handleSubmit(evt) {
+    evt.preventDefault();
+    const options = {
+      headers: {
+        Authorization: `Token ${this.state.auth.email} ${this.state.auth.token}`,
+      },
+    };
+    const response = await axios.put('https://registry.webmr.io/f/');
+  }
+
   render() {
     return (
       <Layout>
@@ -81,7 +93,7 @@ export default class Uploader extends React.Component {
         <input value={this.state.password} onChange={this.handleChange} name="password" />
         <button onClick={this.login}>Login to Webmr</button>
         <img src={this.state.readerResult} />
-        <form method="post" encType="multipart/form-data">
+        <form onSubmit={this.handleSubmit} encType="multipart/form-data">
           <div>
             <label htmlFor="file">Choose file to upload</label>
             <input type="file" id="file" name="file" multiple onChange={this.uploadFile} />
