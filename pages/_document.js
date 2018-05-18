@@ -20,6 +20,8 @@ export default class MyDocument extends Document {
           <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
           <link rel="stylesheet" href="/base.css" />
           <link rel="stylesheet" href="/_next/static/style.css" />
+          <script src="https://rawgit.com/shawwn/leetsaber/master/three.js" />
+          <script src="https://rawgit.com/shawwn/leetsaber/master/OBJLoader.js" />
         </Head>
         <body className="body">
           <Main />

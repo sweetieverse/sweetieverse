@@ -30,6 +30,7 @@
     "security/detect-object-injection": "off",
     "security/detect-non-literal-fs-filename": "off",
     "object-curly-newline": "off",
-    "function-paren-newline": "off"
+    "function-paren-newline": "off",
+    "no-plusplus": "off"
   }
 }

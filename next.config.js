@@ -14,7 +14,7 @@ module.exports = withCSS({
       ],
     });
     config.module.rules.push({
-      test: /\.(png|jpg|gif)$/,
+      test: /\.(png|jpg|gif|obj)$/,
       use: [
         {
           loader: 'file-loader',

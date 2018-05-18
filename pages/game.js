@@ -1,7 +1,7 @@
 import React from 'react';
-import * as THREE from 'three';
 
 import projectsImg from '../assets/images/projects.png';
+import viveObj from '../mixedreality/entities/vive-controller/vr_controller_vive_1_5.obj';
 
 let camera;
 let scene;
@@ -23,11 +23,10 @@ const windowHalfX = global.window ? window.innerWidth / 2 : 500;
 const windowHalfY = global.window ? window.innerHeight / 2 : 500;
 const mouseDelta = 0;
 let fov;
+let geometry;
 
 const fovMAX = 160;
 const fovMIN = 1;
-
-const geometry = new THREE.BoxBufferGeometry(1.5, 1.5, 1.5);
 
 function addCube(material) {
   const cube = new THREE.Mesh(geometry, material);
@@ -149,7 +148,40 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
+function initControllerMeshes() {
+  const controllerMeshes = [null, null];
+  for (let i = 0; i < controllerMeshes.length; i++) {
+    const controllerMesh = new THREE.Object3D();
+    controllerMesh.position.set(i === 0 ? -0.1 : 0.1, 0, 0);
+    controllerMesh.quaternion.setFromUnitVectors(
+      new THREE.Vector3(0, 0, -1),
+      new THREE.Vector3(0, -1, -1),
+    );
+
+    controllerMesh.lastGrabbed = false;
+
+    scene.add(controllerMesh);
+    controllerMeshes[i] = controllerMesh;
+  }
+
+  const controllerMeshLoader = new THREE.OBJLoader();
+  controllerMeshLoader.setPath('/entities/vive-controller/');
+  controllerMeshLoader.load('vr_controller_vive_1_5.obj', (object) => {
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.setPath('/entities/vive-controller/');
+
+    const controllerMesh = object.children[0];
+    controllerMesh.material.map = textureLoader.load('onepointfive_texture.png');
+    controllerMesh.material.specularMap = textureLoader.load('onepointfive_spec.png');
+
+    controllerMeshes[0].add(object.clone());
+    controllerMeshes[1].add(object.clone());
+  });
+}
+
 function init(container) {
+  geometry = new THREE.BoxBufferGeometry(1.5, 1.5, 1.5);
+
   camera = new THREE.PerspectiveCamera(30, windowWidth / windowHeight, 1, 1500);
   camera.position.set(0, 4, 7);
   camera.lookAt(new THREE.Vector3());
@@ -180,6 +212,8 @@ function init(container) {
     window.addEventListener('wheel', onDocumentMouseWheel, false);
     window.addEventListener('keydown', onDocumentKeyDown, false);
   }
+
+  initControllerMeshes();
 }
 
 // logs its childses
