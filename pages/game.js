@@ -54,21 +54,23 @@ function onDocumentKeyDown(evt) {
     scene.background = new THREE.Color(0x3B3961);
   }
 
-  navigator.getVRDisplays().then((displays) => {
-    if (displays.length > 0) {
-      const display = displays[0];
-      const canvas = renderer.domElement;
-      display.requestPresent([{ source: canvas }]).then(() => {
-        renderer.vr.enabled = true;
-        renderer.vr.setDevice(display);
-        const leftEye = display.getEyeParameters('left');
-        const rightEye = display.getEyeParameters('right');
-        canvas.width = Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2;
-        canvas.height = Math.max(leftEye.renderHeight, rightEye.renderHeight);
-        console.log('am i presenting meow?');
-      });
-    }
-  });
+  if (navigator && navigator.getVRDisplays) {
+    navigator.getVRDisplays().then((displays) => {
+      if (displays.length > 0) {
+        const display = displays[0];
+        const canvas = renderer.domElement;
+        display.requestPresent([{ source: canvas }]).then(() => {
+          renderer.vr.enabled = true;
+          renderer.vr.setDevice(display);
+          const leftEye = display.getEyeParameters('left');
+          const rightEye = display.getEyeParameters('right');
+          canvas.width = Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2;
+          canvas.height = Math.max(leftEye.renderHeight, rightEye.renderHeight);
+          console.log('am i presenting meow?');
+        });
+      }
+    });
+  }
 }
 
 function onDocumentMouseMove(event) {
