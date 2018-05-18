@@ -1,28 +1,21 @@
 import * as constants from './constants';
 
-export function requestProducts(productId) {
+export function updateTablePose(tableId, pose) {
   return {
-    type: constants.PRODUCTS_REQUEST,
+    type: constants.UPDATE_TABLE_POSE,
     payload: {
-      productId,
+      tableId,
+      pose,
     },
   };
 }
 
-export function productsSuccess(product) {
+export function requestPlayerBet(playerId, amount) {
   return {
-    type: constants.PRODUCTS_SUCCESS,
+    type: constants.REQUEST_PLAYER_BET,
     payload: {
-      product,
-    },
-  };
-}
-
-export function productsFailure(message) {
-  return {
-    type: constants.PRODUCTS_FAILURE,
-    payload: {
-      message,
+      playerId,
+      amount,
     },
   };
 }

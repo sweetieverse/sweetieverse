@@ -1,9 +1,9 @@
 import * as constants from './constants';
 
-export const name = 'blackjack';
+export const name = 'tables';
 
 const firstTable = {
-  id: 1,
+  id: '$',
   rotation: new Float32Array(4),
   position: new Float32Array(3),
   scale: new Float32Array(3),
@@ -11,13 +11,45 @@ const firstTable = {
 
 const initialState = {
   tables: {
-    1: firstTable,
+    $: firstTable,
   },
-  tableIds: [1],
+  tableIds: ['$'],
   tableConfigs: {
-    1: {
+    $: {
       type: 'BLACKJACK',
       name: 'My cool table',
+    },
+  },
+  balls: {
+    $: {
+      cue: {
+        rotation: new Float32Array(4),
+        position: new Float32Array(3),
+        scale: new Float32Array(3),
+      },
+      1: {
+        rotation: new Float32Array(4),
+        position: new Float32Array(3),
+        scale: new Float32Array(3),
+      },
+      2: {
+        rotation: new Float32Array(4),
+        position: new Float32Array(3),
+        scale: new Float32Array(3),
+      },
+      8: {
+        rotation: new Float32Array(4),
+        position: new Float32Array(3),
+        scale: new Float32Array(3),
+      },
+    },
+  },
+  ballConfigs: {
+    $: {
+      cue: { color: 'white' },
+      1: { color: 'blue' },
+      2: { color: 'yellow' },
+      8: { color: 'black' },
     },
   },
 };
