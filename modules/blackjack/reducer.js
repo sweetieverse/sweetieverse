@@ -9,6 +9,7 @@ const firstTable = {
 };
 
 const initialState = {
+  isFetching: false,
   tables: {
     $: firstTable,
   },

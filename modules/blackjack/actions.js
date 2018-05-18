@@ -22,12 +22,14 @@ export function req(tableId, posX, rotX) {
   };
 }
 
-export function requestPlayerBet(playerId, amount) {
+export function requestPlayerBet(playerId, amount, balls, ballIds) {
   return {
     type: constants.REQUEST_PLAYER_BET,
     payload: {
       playerId,
       amount,
+      balls,
+      ballIds,
     },
   };
 }
