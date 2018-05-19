@@ -1,0 +1,7 @@
+export const LOGIN_REQUEST = '@user/LOGIN_REQUEST';
+export const LOGIN_SUCCESS = '@user/LOGIN_SUCCESS';
+export const LOGIN_FAILURE = '@user/LOGIN_FAILURE';
+
+export const IMAGE_UPLOAD_REQUEST = '@user/IMAGE_UPLOAD_REQUEST';
+export const IMAGE_UPLOAD_SUCCESS = '@user/IMAGE_UPLOAD_SUCCESS';
+export const IMAGE_UPLOAD_FAILURE = '@user/IMAGE_UPLOAD_FAILURE';
