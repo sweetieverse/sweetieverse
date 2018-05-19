@@ -12,14 +12,14 @@ const Layout = props => (
     {config => (
       <React.Fragment>
         <Header
-          slug={config.slug}
-          storeName={config.xmlDoc.attr.name}
+          slug={config.slug || '/'}
+          storeName={config.xmlDoc ? config.xmlDoc.attr.name : 'Sweetieverse'}
           toggleMenu={props.toggleMenu} />
 
         <Menu
-          items={config.menu}
-          slug={config.slug}
-          storeName={config.xmlDoc.attr.name}
+          items={config.menu || []}
+          slug={config.slug || '/'}
+          storeName={config.xmlDoc ? config.xmlDoc.attr.name : 'Sweetieverse'}
           open={props.menuOpen}
           toggleMenu={props.toggleMenu} />
 
