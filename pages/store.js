@@ -6,14 +6,18 @@ import { Storefront } from '../modules/storefront/components';
 
 import { ConfigProvider } from '../modules/context';
 
-export default class Index extends React.Component {
+export default class Store extends React.Component {
   static getInitialProps(context) {
-    return context.query;
+    const json = JSON.parse(JSON.stringify(context.query));
+    console.log(json);
+    return json;
   }
 
   render() {
+    const { xmlDoc, name, products } = this.props;
+
     return (
-      <ConfigProvider value={{ ...this.props }}>
+      <ConfigProvider value={this.props}>
         <Layout>
         </Layout>
       </ConfigProvider>

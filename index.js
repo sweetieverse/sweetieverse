@@ -1,105 +1,112 @@
 const next = require('next');
-const exp = require('express');
 const packageJson = require('package-json');
-const path = require('path');
 const axios = require('axios');
 
-let express;
+const { XmlService } = require('./api/services');
 
+// next.js boilerplate code
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-if (dev) {
-  express = require('./api'); // eslint-disable-line
-} else {
-  express = require('./server/index'); // eslint-disable-line
-}
+const {
+  AddonParamRoute,
+  ProductParamRoute,
+  StoreParamRoute,
+  HomeRoute,
+} = require('./serverConstants');
+
+// init function for an instance of express
+let api;
+if (dev) api = require('./api'); // eslint-disable-line
+else api = require('./server/index'); // eslint-disable-line
 
 app.prepare()
   .then(() => {
-    const server = express();
+    // init express api
+    const server = api();
 
-    server.use(exp.static(path.join(__dirname, './assets/css'), {
-      redirect: false,
-    }));
-
-    server.get('/s/:storeName/:productName/:addon', async (req, res) => {
+    server.get(AddonParamRoute.REQ_PATH, async (req, res) => {
       const { productName, storeName, addon } = req.params;
 
-      let queryParams = {};
+      const reqPath = `/s/${storeName}/${productName}/${addon}`;
+      const pkgName = `${storeName}-${productName}-${addon}`;
 
+      let queryParams = {};
       try {
-        const pkgName = `${storeName}-${productName}-${addon}`;
         const pkgData = await packageJson(pkgName, {
           fullMetadata: true,
         });
         queryParams = {
           ...pkgData.sweetieverse,
           identifier: pkgData.name,
-          slug: `/s/${storeName}/${productName}/${addon}`,
+          slug: reqPath,
         };
       } catch (e) {
         console.log(e); // todo: log this to loggly, etc
       }
 
-      return app.render(req, res, '/addon', queryParams);
+      return app.render(req, res, AddonParamRoute.RES_PATH, queryParams);
     });
 
-    server.get('/s/:storeName/:productName', async (req, res) => {
+    server.get(ProductParamRoute.REQ_PATH, async (req, res) => {
       const { productName, storeName } = req.params;
+      const reqPath = `/s/${storeName}/${productName}`;
+      const pkgName = `${storeName}-${productName}`;
 
       let queryParams = {};
-
       try {
-        const pkgName = `${storeName}-${productName}`;
         const pkgData = await packageJson(pkgName, {
           fullMetadata: true,
         });
         queryParams = {
           ...pkgData.sweetieverse,
           identifier: pkgData.name,
-          slug: `/s/${storeName}/${productName}`,
+          slug: reqPath,
         };
       } catch (e) {
         console.log(e); // todo: log this to loggly, etc
       }
 
-      return app.render(req, res, '/product', queryParams);
+      return app.render(req, res, ProductParamRoute.RES_PATH, queryParams);
     });
 
-    server.get('/s/:storeName', async (req, res) => {
+    server.get(StoreParamRoute.REQ_PATH, async (req, res) => {
       const { storeName } = req.params;
 
+      const actualPath = `/s/${storeName}`;
+
       let pkgData = {};
-      let xml = '';
+      let xmlDoc = '';
+      let products = [];
 
       try {
         pkgData = await packageJson(storeName, {
           fullMetadata: true,
         });
-        const modelUrl = pkgData.sweetieverse.model;
-        const { data } = await axios.get(modelUrl);
-        xml = JSON.stringify(data);
+        const xmlUrl = pkgData.sweetieverse ? pkgData.sweetieverse.model : '';
+        xmlDoc = await XmlService.fetchStoreXml(xmlUrl);
+        products = await XmlService.parseDocumentForProducts(xmlDoc);
+        console.log(products);
       } catch (e) {
         console.log(e); // todo: log this to loggly, etc
       }
 
       const queryParams = pkgData.sweetieverse ? {
-        ...pkgData.sweetieverse,
-        identifier: pkgData.name,
-        slug: `/s/${storeName}`,
-        model: xml,
+        xmlDoc,
+        products,
+        identifier: storeName,
+        slug: actualPath,
       } : {};
 
-      return app.render(req, res, '/', queryParams);
+      return app.render(req, res, StoreParamRoute.RES_PATH, queryParams);
     });
 
     server.get('*', (req, res) => handle(req, res));
 
     server.listen(port, (err) => {
       if (err) throw err;
-      console.log(`> Ready on http://localhost:${port}`);
+      console.log(`The magic happens on http://localhost:${port}`);
     });
   });
