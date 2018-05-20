@@ -3,17 +3,6 @@ import * as React from 'react';
 const fb = global.window ? window.firebase : null;
 const firebaseui = global.window ? window.firebaseui : null;
 
-function getWidgetUrl() {
-  return '/widget';
-}
-
-/**
- * Redirects to the FirebaseUI widget.
- */
-const signInWithRedirect = () => (
-  global.window ? window.location.assign(getWidgetUrl()) : null
-);
-
 function withAuthHook(Component) {
   if (!fb || !firebaseui) return Component;
 
@@ -77,32 +66,26 @@ function withAuthHook(Component) {
           },
           // Opens IDP Providers sign-in flow in a popup.
           signInFlow: 'popup',
+          signInSuccessUrl: '/user',
           signInOptions: [
-            // TODO(developer): Remove the providers you don't need for your app.
             {
               provider: fb.auth.GoogleAuthProvider.PROVIDER_ID,
             },
             {
               provider: fb.auth.FacebookAuthProvider.PROVIDER_ID,
-              scopes: [
-                'public_profile',
-                'email',
-                'user_likes',
-                'user_friends',
-              ],
             },
             {
-              provider: fb.auth.EmailAuthProvider.PROVIDER_ID,
-              // Whether the display name should be displayed in Sign Up page.
-              requireDisplayName: true,
+              provider: fb.auth.GithubAuthProvider.PROVIDER_ID,
             },
           ],
         };
       }
 
       // Initialize the FirebaseUI Widget using Firebase.
-      this.ui = new firebaseui.auth.AuthUI(fb.auth());
-      this.ui.start('#firebaseui-container', getUiConfig());
+      if (!this.ui) {
+        this.ui = new firebaseui.auth.AuthUI(fb.auth());
+        this.ui.start('#firebaseui-container', getUiConfig());
+      }
     }
 
     render() {

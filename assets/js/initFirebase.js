@@ -8,5 +8,11 @@
     messagingSenderId: '927759104111',
   };
 
-  if (window && window.firebase) window.firebase.initializeApp(config);
+  if (window && window.firebase) {
+    const fb = window.firebase;
+
+    fb.initializeApp(config);
+
+    fb.auth().setPersistence(fb.auth.Auth.Persistence.LOCAL);
+  }
 }());
