@@ -4,7 +4,8 @@ import styles from './styles.css';
 
 import projectsImage from '../../../../assets/images/x_projects.png';
 
-import { Player } from './objects';
+import { PlayerObject } from './objects';
+import { Player } from './components';
 
 const { THREE } = global.window ? window : { THREE: null };
 
@@ -73,7 +74,7 @@ class Game extends React.Component {
     const players = [];
     const numPlayers = 2; // normally get this from this.props.players.length or something
     for (let i = 0; i < numPlayers; i += 1) {
-      players.push(new Player(this.scene));
+      players.push(new PlayerObject(this.scene));
     }
     this.setState({ players });
   }
@@ -276,16 +277,21 @@ class Game extends React.Component {
     this.renderer.render(this.scene, this.camera);
     this.camera.updateProjectionMatrix();
 
-    this.updatePlayers(gamepads);
     this.updateGamepads();
 
     requestAnimationFrame(this.animate);
   }
 
   render() {
+    const { gamepads } = this.props;
+    const { players } = this.state;
+
     return (
       <div className={styles.game}>
         <canvas ref={this.setCanvasRef} width={canvasWidth} height={canvasHeight} />
+        {players.map(player => (
+          <Player player={player} scene={this.scene} gamepads={gamepads} />
+        ))}
       </div>
     );
   }

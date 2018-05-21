@@ -1,26 +1,30 @@
-import * as React, { Component } from 'react';
+import * as React from 'react';
 import { throttle } from 'lodash';
 import util from 'util';
 
 const { THREE } = global.window ? window : { THREE: null };
 
-class Player extends Component {
+class Player extends React.Component {
   constructor(props) {
     super(props);
-    this.controllerMeshes = [null, null];
-    this.scene = null;
-    this.throttler = null;
+    this.player = null;
   }
 
-  updateScene(scene) {
-    if (this.scene || !scene) return;
+  componentDidMount() {
+    const { player } = this.props;
+    if (player) {
+      this.player = player;
+      this.initScene();
+    }
+  }
 
-    this.scene = scene;
+  initScene() {
+    if (!this.player.scene) return;
 
     const me = this;
     const controllerMeshLoader = new THREE.OBJLoader();
 
-    for (let i = 0; i < this.controllerMeshes.length; i += 1) {
+    for (let i = 0; i < this.player.controllerMeshes.length; i += 1) {
       const controllerMesh = new THREE.Object3D();
       controllerMesh.position.set(i === 0 ? -0.1 : 0.1, 0, 0);
       controllerMesh.quaternion.setFromUnitVectors(
@@ -28,8 +32,8 @@ class Player extends Component {
         new THREE.Vector3(0, -1, -1),
       );
       controllerMesh.lastGrabbed = false;
-      this.scene.add(controllerMesh);
-      this.controllerMeshes[i] = controllerMesh;
+      this.player.scene.add(controllerMesh);
+      this.player.controllerMeshes[i] = controllerMesh;
     }
 
     controllerMeshLoader.setPath('models/vive-ctrl/');
@@ -40,12 +44,14 @@ class Player extends Component {
       const controllerMesh = object.children[0];
       controllerMesh.material.map = textureLoader.load('onepointfive_texture.png');
       controllerMesh.material.specularMap = textureLoader.load('onepointfive_spec.png');
-      me.controllerMeshes[0].add(object.clone());
-      me.controllerMeshes[1].add(object.clone());
+      me.player.controllerMeshes[0].add(object.clone());
+      me.player.controllerMeshes[1].add(object.clone());
     });
   }
 
   updateControllers(gamepads) {
+    if (!gamepads) return;
+
     /* eslint-disable */
     function logGamepads() {
       console.log(util.inspect(gamepads, {showHidden: false, depth: null}));
@@ -57,7 +63,7 @@ class Player extends Component {
     for (let i = 0; i < gamepads.length; i += 1) {
       const gamepad = gamepads[i];
       if (gamepad) {
-        const controllerMesh = this.controllerMeshes[i];
+        const controllerMesh = this.player.controllerMeshes[i];
         controllerMesh.position.fromArray(gamepad.position);
         controllerMesh.quaternion.fromArray(gamepad.orientation);
         controllerMesh.updateMatrixWorld();
@@ -66,8 +72,7 @@ class Player extends Component {
   }
 
   update() {
-    const { gamepads, scene } = this.props;
-    this.updateScene(scene);
+    const { gamepads } = this.props;
     this.updateControllers(gamepads);
   }
 
