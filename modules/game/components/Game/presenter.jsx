@@ -26,6 +26,9 @@ const windowHalfY = global.window ? window.innerHeight / 2 : 250;
 class Game extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      players: [1, 2],
+    };
     this.camera = null;
     this.fov = null;
     this.scene = null;
@@ -45,6 +48,7 @@ class Game extends React.Component {
     this.onDocumentMouseWheel = this.onDocumentMouseWheel.bind(this);
     this.onDocumentMouseUp = this.onDocumentMouseUp.bind(this);
     this.onDocumentMouseOut = this.onDocumentMouseOut.bind(this);
+    this.onDocumentKeyDown = this.onDocumentKeyDown.bind(this);
   }
 
   setCanvasRef(el) {
@@ -77,7 +81,6 @@ class Game extends React.Component {
 
   initScene() {
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xFFFFFF);
     this.scene.add(this.group);
     this.scene.add(this.camera);
     this.scene.add(this.pointLight);
@@ -129,6 +132,7 @@ class Game extends React.Component {
   initEventListeners() {
     window.addEventListener('mousedown', this.onDocumentMouseDown, false);
     window.addEventListener('wheel', this.onDocumentMouseWheel, false);
+    window.addEventListener('keydown', this.onDocumentKeyDown, false);
   }
 
   onDocumentMouseDown(evt) {
@@ -164,6 +168,31 @@ class Game extends React.Component {
     document.removeEventListener('mousemove', Game.onDocumentMouseMove, false);
     document.removeEventListener('mouseup', this.onDocumentMouseUp, false);
     document.removeEventListener('mouseout', this.onDocumentMouseOut, false);
+  }
+
+  onDocumentKeyDown(evt) {
+    const code = evt.keyCode;
+
+    // press 'm' for magic leap (any other key for other vr)
+    if (code !== 77) {
+      this.scene.background = new THREE.Color(0x3B3961);
+    }
+
+    navigator.getVRDisplays().then((displays) => {
+      if (displays.length > 0) {
+        const display = displays[0];
+        const canvas = this.renderer.domElement;
+        display.requestPresent([{ source: canvas }]).then(() => {
+          this.renderer.vr.enabled = true;
+          this.renderer.vr.setDevice(display);
+          const leftEye = display.getEyeParameters('left');
+          const rightEye = display.getEyeParameters('right');
+          canvas.width = Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2;
+          canvas.height = Math.max(leftEye.renderHeight, rightEye.renderHeight);
+          console.log('am i presenting meow?');
+        });
+      }
+    });
   }
 
   animate() {
