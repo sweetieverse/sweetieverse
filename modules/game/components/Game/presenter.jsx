@@ -22,6 +22,7 @@ class Game extends React.Component {
     this.group = null;
     this.cube = null;
     this.canvas = null;
+    this.pointLight = null;
     this.bindCallbacks();
   }
 
@@ -37,8 +38,8 @@ class Game extends React.Component {
       this.initRenderer();
       this.initGroups();
       this.initCamera();
-      this.initScene();
       this.initLight();
+      this.initScene();
       this.startRenderer();
       this.addImage(projectsImage);
       this.animate();
@@ -63,19 +64,17 @@ class Game extends React.Component {
     this.scene.background = new THREE.Color(0xFFFFFF);
     this.scene.add(this.group);
     this.scene.add(this.camera);
+    this.scene.add(this.pointLight);
   }
 
   initLight() {
     // create a point light
-    const pointLight =
+    this.pointLight =
       new THREE.PointLight(0xFFFFFF);
-
     // set its position
-    pointLight.position.x = 10;
-    pointLight.position.y = 50;
-    pointLight.position.z = 130;
-
-    this.scene.add(pointLight);
+    this.pointLight.position.x = 10;
+    this.pointLight.position.y = 50;
+    this.pointLight.position.z = 130;
   }
 
   initGroups() {
