@@ -261,10 +261,6 @@ class Game extends React.Component {
     }
   }
 
-  updatePlayers(gamepads) {
-    this.state.players.forEach(player => player.updateControllers(gamepads));
-  }
-
   animate() {
     const { gamepads, buttonPressed } = this.props;
 
