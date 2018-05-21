@@ -1,28 +1,51 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+
+import { setUser, updateUserGamepads } from '../../game/actions';
+import { getUserId } from '../../game/selectors';
+
+const mapStateToProps = createStructuredSelector({
+  userId: getUserId,
+});
+
+const mapDispatchToProps = {
+  setUser,
+  updateUserGamepads,
+};
 
 const fb = global.window ? window.firebase : null;
 
 function withDb(Component) {
-  return class ComponentWithDb extends React.Component {
+  class ComponentWithDb extends React.Component {
     constructor(props) {
       super(props);
       this.db = fb ? fb.database() : null;
     }
 
-    joinGame(playerName, data) {
-      if (this.db) {
-        this.db.ref(`players/${playerName}`).update(data);
-      }
+    setUser(id, data) {
+      this.props.setUser(id, data);
+    }
+
+    updateUserGamepads(gamepads) {
+      const { userId } = this.props;
+      if (userId) this.props.updateUserGamepads(userId, gamepads);
     }
 
     render() {
       return (
         <Component
-          joinGame={this.joinGame.bind(this)}
+          updateDbGamepads={this.updateUserGamepads.bind(this)}
+          setUser={this.setUser.bind(this)}
           {...this.props} />
       );
     }
-  };
+  }
+
+  return connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(ComponentWithDb);
 }
 
 export default withDb;

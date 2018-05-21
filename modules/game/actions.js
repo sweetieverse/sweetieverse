@@ -1,11 +1,22 @@
 import * as constants from './constants';
 
-export function setUser(displayName, data) {
+export function setUser(id, data) {
   return {
     type: constants.SET_USER,
     payload: {
-      displayName,
+      id,
       data,
+    },
+  };
+}
+
+export function updateUserGamepads(id, gamepads) {
+  console.log(id, gamepads);
+  return {
+    type: constants.UPDATE_USER_GAMEPADS,
+    payload: {
+      id,
+      gamepads,
     },
   };
 }

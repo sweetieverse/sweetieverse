@@ -1,4 +1,6 @@
 import React from 'react';
+import qs from 'query-string';
+import { throttle } from 'lodash';
 
 import styles from './styles.css';
 
@@ -40,6 +42,7 @@ class Game extends React.Component {
     this.cube = null;
     this.canvas = null;
     this.pointLight = null;
+    this.throttler = null;
     this.bindCallbacks();
   }
 
@@ -52,6 +55,20 @@ class Game extends React.Component {
     this.onDocumentMouseUp = this.onDocumentMouseUp.bind(this);
     this.onDocumentMouseOut = this.onDocumentMouseOut.bind(this);
     this.onDocumentKeyDown = this.onDocumentKeyDown.bind(this);
+  }
+
+  componentDidMount() {
+    const { setUser } = this.props;
+    const { search } = global.window ? window.location : { search: '' };
+    const parsed = qs.parse(search);
+    if (parsed && parsed.p) {
+      const id = parsed.p;
+      const data = {
+        id,
+        displayName: id,
+      };
+      setUser(id, data);
+    }
   }
 
   setCanvasRef(el) {
@@ -211,12 +228,19 @@ class Game extends React.Component {
   }
 
   updateGamepads() {
-    const { updateGamepads } = this.props;
+    const { updateGamepads, updateDbGamepads } = this.props;
+
+    let gamepads;
 
     if (navigator && navigator.getGamepads) {
-      const gamepads = navigator.getGamepads();
       const gp = [];
       let pressed = false;
+      gamepads = navigator.getGamepads();
+
+      if (!this.throttler) {
+        this.throttler = throttle(() => { updateDbGamepads(gamepads); }, 500);
+      }
+      this.throttler();
 
       for (let i = 0; i < gamepads.length; i += 1) {
         const pad = gamepads[i];
@@ -273,7 +297,7 @@ class Game extends React.Component {
     this.renderer.render(this.scene, this.camera);
     this.camera.updateProjectionMatrix();
 
-    // this.updateGamepads();
+    this.updateGamepads();
 
     requestAnimationFrame(this.animate);
   }

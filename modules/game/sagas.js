@@ -1,6 +1,7 @@
 import { call, fork, put, take, all } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
 
+import * as api from './api';
 import * as actions from './actions';
 import * as constants from './constants';
 import * as parse from './parse';
@@ -25,6 +26,24 @@ function firebasePlayersChannel() {
   });
 }
 
+function* setUser(id, data) {
+  try {
+    yield call(api.setUser, id, data);
+  } catch (error) {
+    console.log(error, error.message);
+    yield null;
+  }
+}
+
+function* updateUserGamepads(id, gamepads) {
+  try {
+    yield call(api.updateUserGamepads, id, gamepads);
+  } catch (error) {
+    console.log(error, error.message);
+    yield null;
+  }
+}
+
 /**
  *  Generator function to listen for redux actions
  *
@@ -33,9 +52,20 @@ function firebasePlayersChannel() {
  */
 function* watch() {
   while (true) {
-    const { type, payload = {} } = yield take([]);
+    const { type, payload = {} } = yield take([
+      constants.SET_USER,
+      constants.UPDATE_USER_GAMEPADS,
+    ]);
 
     switch (type) {
+      case constants.SET_USER:
+        yield fork(setUser, payload.id, payload.data);
+        break;
+
+      case constants.UPDATE_USER_GAMEPADS:
+        yield fork(updateUserGamepads, payload.id, payload.gamepads);
+        break;
+
       default:
         yield null;
     }

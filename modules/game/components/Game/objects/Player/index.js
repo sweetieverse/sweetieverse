@@ -1,6 +1,3 @@
-import { throttle } from 'lodash';
-import util from 'util';
-
 const { THREE } = global.window ? window : { THREE: null };
 
 class Player {
