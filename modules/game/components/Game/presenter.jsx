@@ -41,6 +41,7 @@ class Game extends React.Component {
       this.initLight();
       this.startRenderer();
       this.addImage(projectsImage);
+      this.animate();
     }
   }
 
@@ -48,7 +49,6 @@ class Game extends React.Component {
     // Start the renderer.
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(canvasWidth, canvasHeight);
-    this.animate();
   }
 
   initCamera() {
