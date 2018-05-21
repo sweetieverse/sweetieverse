@@ -20,7 +20,7 @@ class Player {
       controllerMesh.position.set(i === 0 ? -0.1 : 0.1, 0, 0);
       controllerMesh.quaternion.setFromUnitVectors(
         new THREE.Vector3(0, 0, -1),
-        new THREE.Vector3(0, -1, -1)
+        new THREE.Vector3(0, -1, -1),
       );
       controllerMesh.lastGrabbed = false;
       this.scene.add(controllerMesh);
@@ -40,28 +40,25 @@ class Player {
     });
   }
 
-  updateControllers() {
-    if (navigator && navigator.getGamepads) {
-      const gamepads = navigator.getGamepads();
+  updateControllers(gamepads) {
+    /* eslint-disable */
+    function logGamepads() {
+      console.log(util.inspect(gamepads, {showHidden: false, depth: null}));
+    }
 
-      /* eslint-disable */
-      function logGamepads() {
-        console.log(util.inspect(gamepads, {showHidden: false, depth: null}));
-      }
-      /* eslint-enable */
+    /* eslint-enable */
 
-      if (!this.throttler) this.throttler = throttle(logGamepads, 1000);
+    if (!this.throttler) this.throttler = throttle(logGamepads, 1000);
 
-      this.throttler();
+    this.throttler();
 
-      for (let i = 0; i < gamepads.length; i += 1) {
-        const gamepad = gamepads[i];
-        if (gamepad) {
-          const controllerMesh = this.controllerMeshes[i];
-          controllerMesh.position.fromArray(gamepad.pose.position);
-          controllerMesh.quaternion.fromArray(gamepad.pose.orientation);
-          controllerMesh.updateMatrixWorld();
-        }
+    for (let i = 0; i < gamepads.length; i += 1) {
+      const gamepad = gamepads[i];
+      if (gamepad) {
+        const controllerMesh = this.controllerMeshes[i];
+        controllerMesh.position.fromArray(gamepad.position);
+        controllerMesh.quaternion.fromArray(gamepad.orientation);
+        controllerMesh.updateMatrixWorld();
       }
     }
   }

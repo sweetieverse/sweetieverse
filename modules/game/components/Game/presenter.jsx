@@ -30,6 +30,7 @@ class Game extends React.Component {
     super(props);
     this.state = {
       players: [],
+      // buttons: [],
     };
     this.camera = null;
     this.fov = null;
@@ -53,6 +54,10 @@ class Game extends React.Component {
     this.onDocumentKeyDown = this.onDocumentKeyDown.bind(this);
   }
 
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //
+  // }
+
   setCanvasRef(el) {
     if (el) this.canvas = el;
     if (THREE) {
@@ -62,7 +67,7 @@ class Game extends React.Component {
       this.initLight();
       this.initScene();
       this.startRenderer();
-      this.addImage(projectsImage);
+      // this.addImage(projectsImage);
       this.animate();
       this.initEventListeners();
       this.initPlayers();
@@ -209,7 +214,33 @@ class Game extends React.Component {
     }
   }
 
+  updateGamepads() {
+    const { updateGamepads } = this.props;
+
+    if (navigator && navigator.getGamepads) {
+      const gamepads = navigator.getGamepads();
+      const gp = [];
+      const buttons = [];
+
+      for (let i = 0; i < gamepads.length; i += 1) {
+        if (gamepads[i] && gamepads[i].pose) {
+          gp.push({
+            position: gamepads[i].pose.position,
+            orientation: gamepads[i].pose.orientation,
+          });
+          buttons.push(gp.buttons);
+        }
+      }
+
+      updateGamepads(gp, buttons);
+    }
+  }
+
   animate() {
+    const { gamepads, gamepadButtons } = this.props;
+
+    this.updateGamepads();
+
     this.renderer.state.reset();
     this.camera.fov = this.fov;
     this.camera.aspect = canvasWidth / canvasHeight;
@@ -217,7 +248,7 @@ class Game extends React.Component {
     this.group.rotation.x += (targetRotationY - this.group.rotation.x) * 0.05;
     this.renderer.render(this.scene, this.camera);
     this.camera.updateProjectionMatrix();
-    this.state.players.forEach(player => player.updateControllers());
+    this.state.players.forEach(player => player.updateControllers(gamepads));
     requestAnimationFrame(this.animate);
   }
 
