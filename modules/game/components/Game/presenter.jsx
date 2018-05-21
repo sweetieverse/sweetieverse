@@ -241,19 +241,18 @@ class Game extends React.Component {
       let pressed = false;
       gamepads = navigator.getGamepads();
 
-      if (!this.throttler) {
-        this.throttler = throttle(() => { updateDbGamepads(gamepads); }, 500);
-      }
-      this.throttler();
-
       for (let i = 0; i < gamepads.length; i += 1) {
         const pad = gamepads[i];
         if (pad) {
           if (pad.pose) {
             gp.push({
-              position: pad.pose.position,
-              orientation: pad.pose.orientation,
+              pose: pad.pose,
               hand: pad.hand,
+              index: pad.index,
+              buttons: pad.buttons,
+              axes: pad.axes,
+              gesture: pad.gesture,
+              connected: pad.connected,
             });
           }
           if (pad.buttons) {
@@ -267,6 +266,11 @@ class Game extends React.Component {
           }
         }
       }
+
+      if (!this.throttler) {
+        this.throttler = throttle(() => { updateDbGamepads(gp); }, 500);
+      }
+      this.throttler();
 
       updateGamepads(gp, pressed);
     }
