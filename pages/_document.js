@@ -23,7 +23,9 @@ export default class MyDocument extends Document {
           <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
           <link rel="stylesheet" href="/base.css" />
           <link rel="stylesheet" href="/_next/static/style.css" />
-          <script src="/js/initFirebase.js"></script>
+          <script src="/js/initFirebase.js" />
+          <script src="/js/three.min.js" />
+          <script src="/js/OBJLoader.js" />
         </Head>
         <body className="body">
           <Main />
