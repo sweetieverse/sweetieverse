@@ -9,8 +9,19 @@ const { THREE } = global.window ? window : { THREE: null };
 const canvasWidth = 500;
 const canvasHeight = 500;
 
-const targetRotation = 0;
-const targetRotationY = 0;
+const fovMAX = 160;
+const fovMIN = 1;
+
+let targetRotation = 0;
+let targetRotationY = 0;
+let targetRotationOnMouseDown = 0;
+let targetRotationYOnMouseDown = 0;
+let mouseX = 0;
+let mouseY = 0;
+let mouseXOnMouseDown = 0;
+let mouseYOnMouseDown = 0;
+const windowHalfX = global.window ? window.innerWidth / 2 : 250;
+const windowHalfY = global.window ? window.innerHeight / 2 : 250;
 
 class Game extends React.Component {
   constructor(props) {
@@ -30,6 +41,10 @@ class Game extends React.Component {
     this.setCanvasRef = this.setCanvasRef.bind(this);
     this.animate = this.animate.bind(this);
     this.startRenderer = this.startRenderer.bind(this);
+    this.onDocumentMouseDown = this.onDocumentMouseDown.bind(this);
+    this.onDocumentMouseWheel = this.onDocumentMouseWheel.bind(this);
+    this.onDocumentMouseUp = this.onDocumentMouseUp.bind(this);
+    this.onDocumentMouseOut = this.onDocumentMouseOut.bind(this);
   }
 
   setCanvasRef(el) {
@@ -43,6 +58,7 @@ class Game extends React.Component {
       this.startRenderer();
       this.addImage(projectsImage);
       this.animate();
+      this.initEventListeners();
     }
   }
 
@@ -108,6 +124,46 @@ class Game extends React.Component {
     cube.position.set(0, 0, 0);
     cube.rotation.set(0, 0, 0);
     this.cube.add(cube);
+  }
+
+  initEventListeners() {
+    window.addEventListener('mousedown', this.onDocumentMouseDown, false);
+    window.addEventListener('wheel', this.onDocumentMouseWheel, false);
+  }
+
+  onDocumentMouseDown(evt) {
+    evt.preventDefault();
+    window.addEventListener('mousemove', Game.onDocumentMouseMove, false);
+    window.addEventListener('mouseup', this.onDocumentMouseUp, false);
+    window.addEventListener('mouseout', this.onDocumentMouseOut, false);
+    mouseXOnMouseDown = evt.clientX - windowHalfX;
+    mouseYOnMouseDown = evt.clientY - windowHalfY;
+    targetRotationOnMouseDown = targetRotation;
+    targetRotationYOnMouseDown = targetRotationY;
+  }
+
+  onDocumentMouseWheel(evt) {
+    const fovDelta = this.fov - (evt.deltaY * 0.05);
+    this.fov = Math.max(Math.min(fovDelta, fovMAX), fovMIN);
+  }
+
+  static onDocumentMouseMove(evt) {
+    mouseX = evt.clientX - windowHalfX;
+    mouseY = evt.clientY - windowHalfY;
+    targetRotation = (targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown)) * 0.02;
+    targetRotationY = (targetRotationYOnMouseDown + (mouseY - mouseYOnMouseDown)) * 0.02;
+  }
+
+  onDocumentMouseUp() {
+    document.removeEventListener('mousemove', Game.onDocumentMouseMove, false);
+    document.removeEventListener('mouseup', this.onDocumentMouseUp, false);
+    document.removeEventListener('mouseout', this.onDocumentMouseOut, false);
+  }
+
+  onDocumentMouseOut() {
+    document.removeEventListener('mousemove', Game.onDocumentMouseMove, false);
+    document.removeEventListener('mouseup', this.onDocumentMouseUp, false);
+    document.removeEventListener('mouseout', this.onDocumentMouseOut, false);
   }
 
   animate() {
