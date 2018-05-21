@@ -4,6 +4,8 @@ import styles from './styles.css';
 
 import projectsImage from '../../../../assets/images/x_projects.png';
 
+import { Player } from './objects';
+
 const { THREE } = global.window ? window : { THREE: null };
 
 const canvasWidth = 500;
@@ -27,7 +29,7 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      players: [1, 2],
+      players: [],
     };
     this.camera = null;
     this.fov = null;
@@ -63,7 +65,17 @@ class Game extends React.Component {
       this.addImage(projectsImage);
       this.animate();
       this.initEventListeners();
+      this.initPlayers();
     }
+  }
+
+  initPlayers() {
+    const players = [];
+    const numPlayers = 2; // normally get this from this.props.players.length or something
+    for (let i = 0; i < numPlayers; i += 1) {
+      players.push(new Player(this.scene));
+    }
+    this.setState({ players });
   }
 
   startRenderer() {
@@ -178,21 +190,23 @@ class Game extends React.Component {
       this.scene.background = new THREE.Color(0x3B3961);
     }
 
-    navigator.getVRDisplays().then((displays) => {
-      if (displays.length > 0) {
-        const display = displays[0];
-        const canvas = this.renderer.domElement;
-        display.requestPresent([{ source: canvas }]).then(() => {
-          this.renderer.vr.enabled = true;
-          this.renderer.vr.setDevice(display);
-          const leftEye = display.getEyeParameters('left');
-          const rightEye = display.getEyeParameters('right');
-          canvas.width = Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2;
-          canvas.height = Math.max(leftEye.renderHeight, rightEye.renderHeight);
-          console.log('am i presenting meow?');
-        });
-      }
-    });
+    if (navigator.getVRDisplays) {
+      navigator.getVRDisplays().then((displays) => {
+        if (displays.length > 0) {
+          const display = displays[0];
+          const canvas = this.renderer.domElement;
+          display.requestPresent([{ source: canvas }]).then(() => {
+            this.renderer.vr.enabled = true;
+            this.renderer.vr.setDevice(display);
+            const leftEye = display.getEyeParameters('left');
+            const rightEye = display.getEyeParameters('right');
+            canvas.width = Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2;
+            canvas.height = Math.max(leftEye.renderHeight, rightEye.renderHeight);
+            console.log('am i presenting meow?');
+          });
+        }
+      });
+    }
   }
 
   animate() {
@@ -203,6 +217,7 @@ class Game extends React.Component {
     this.group.rotation.x += (targetRotationY - this.group.rotation.x) * 0.05;
     this.renderer.render(this.scene, this.camera);
     this.camera.updateProjectionMatrix();
+    this.state.players.forEach(player => player.updateControllers());
     requestAnimationFrame(this.animate);
   }
 
