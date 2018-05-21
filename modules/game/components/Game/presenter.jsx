@@ -30,7 +30,6 @@ class Game extends React.Component {
     super(props);
     this.state = {
       players: [],
-      // buttons: [],
     };
     this.camera = null;
     this.fov = null;
@@ -54,10 +53,6 @@ class Game extends React.Component {
     this.onDocumentKeyDown = this.onDocumentKeyDown.bind(this);
   }
 
-  // static getDerivedStateFromProps(nextProps, prevState) {
-  //
-  // }
-
   setCanvasRef(el) {
     if (el) this.canvas = el;
     if (THREE) {
@@ -67,7 +62,7 @@ class Game extends React.Component {
       this.initLight();
       this.initScene();
       this.startRenderer();
-      // this.addImage(projectsImage);
+      this.addImage(projectsImage);
       this.animate();
       this.initEventListeners();
       this.initPlayers();
@@ -139,7 +134,7 @@ class Game extends React.Component {
   }
 
   addCube(material) {
-    const geometry = new THREE.BoxBufferGeometry(1.5, 1.5, 1.5);
+    const geometry = new THREE.BoxBufferGeometry(1.0, 1.0, 1.0);
     const cube = new THREE.Mesh(geometry, material);
     cube.position.set(0, 0, 0);
     cube.rotation.set(0, 0, 0);
@@ -220,35 +215,70 @@ class Game extends React.Component {
     if (navigator && navigator.getGamepads) {
       const gamepads = navigator.getGamepads();
       const gp = [];
-      const buttons = [];
+      let pressed = false;
 
       for (let i = 0; i < gamepads.length; i += 1) {
-        if (gamepads[i] && gamepads[i].pose) {
-          gp.push({
-            position: gamepads[i].pose.position,
-            orientation: gamepads[i].pose.orientation,
-          });
-          buttons.push(gp.buttons);
+        const pad = gamepads[i];
+        if (pad) {
+          if (pad.pose) {
+            gp.push({
+              position: pad.pose.position,
+              orientation: pad.pose.orientation,
+              hand: pad.hand,
+            });
+          }
+          if (pad.buttons) {
+            for (let j = 0; j < pad.buttons.length; j += 1) {
+              const button = pad.buttons[j];
+              if (button.pressed) {
+                pressed = true;
+                break;
+              }
+            }
+          }
         }
       }
 
-      updateGamepads(gp, buttons);
+      updateGamepads(gp, pressed);
     }
   }
 
-  animate() {
-    const { gamepads, gamepadButtons } = this.props;
+  updateCube(gamepads, buttonPressed) {
+    this.group.rotation.y += (targetRotation - this.group.rotation.y) * 0.05;
+    this.group.rotation.x += (targetRotationY - this.group.rotation.x) * 0.05;
 
-    this.updateGamepads();
+    for (let i = 0; i < gamepads.length; i += 1) {
+      const pad = gamepads[i];
+      if (pad && pad.position && buttonPressed) {
+        const posX = pad.position[0];
+        const posY = pad.position[1];
+        const posZ = pad.position[2];
+        this.group.position.x = posX;
+        this.group.position.y = posY;
+        this.group.posZ = posZ;
+      }
+    }
+  }
+
+  updatePlayers(gamepads) {
+    this.state.players.forEach(player => player.updateControllers(gamepads));
+  }
+
+  animate() {
+    const { gamepads, buttonPressed } = this.props;
 
     this.renderer.state.reset();
     this.camera.fov = this.fov;
     this.camera.aspect = canvasWidth / canvasHeight;
-    this.group.rotation.y += (targetRotation - this.group.rotation.y) * 0.05;
-    this.group.rotation.x += (targetRotationY - this.group.rotation.x) * 0.05;
+
+    this.updateCube(gamepads, buttonPressed);
+
     this.renderer.render(this.scene, this.camera);
     this.camera.updateProjectionMatrix();
-    this.state.players.forEach(player => player.updateControllers(gamepads));
+
+    this.updatePlayers(gamepads);
+    this.updateGamepads();
+
     requestAnimationFrame(this.animate);
   }
 

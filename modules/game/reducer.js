@@ -4,7 +4,7 @@ export const name = 'game';
 
 const initialState = {
   gamepads: [],
-  gamepadButtons: [],
+  buttonPressed: false,
 };
 
 export function reducer(state = initialState, action) {
@@ -13,7 +13,7 @@ export function reducer(state = initialState, action) {
       return {
         ...state,
         gamepads: action.payload.gamepads,
-        gamepadButtons: action.payload.buttons,
+        buttonPressed: action.payload.buttonPressed,
       };
 
     default:

@@ -9,7 +9,7 @@ export const getGamepads = createSelector(
   state => state.gamepads,
 );
 
-export const getGamepadButtons = createSelector(
+export const getButtonPressed = createSelector(
   [getState],
-  state => state.gamepadButtons,
+  state => state.buttonPressed,
 );
