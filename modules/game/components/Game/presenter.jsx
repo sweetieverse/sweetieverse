@@ -331,13 +331,13 @@ class Game extends React.Component {
     return (
       <div className={styles.game}>
         <canvas ref={this.setCanvasRef} width={canvasWidth} height={canvasHeight} />
-        {gamePlayers.map((player, idx) => (
-          <Player
-            key={`game-player-${idx}`}
-            player={player}
-            scene={this.scene}
-            gamepads={player.gamepads} />
-        ))}
+        {/* {gamePlayers.map((player, idx) => ( */}
+          {/* <Player */}
+            {/* key={`game-player-${idx}`} */}
+            {/* player={player} */}
+            {/* scene={this.scene} */}
+            {/* gamepads={player.gamepads} /> */}
+        {/* ))} */}
         <Player player={userPlayer} scene={this.scene} gamepads={gamepads} />
       </div>
     );

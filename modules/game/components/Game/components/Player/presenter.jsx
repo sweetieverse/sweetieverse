@@ -7,15 +7,8 @@ const { THREE } = global.window ? window : { THREE: null };
 class Player extends React.Component {
   constructor(props) {
     super(props);
-    this.player = null;
-  }
-
-  componentDidMount() {
-    const { player } = this.props;
-    if (player) {
-      this.player = player;
-      this.initScene();
-    }
+    this.player = props.player;
+    this.initScene();
   }
 
   initScene() {
@@ -63,23 +56,23 @@ class Player extends React.Component {
     for (let i = 0; i < gamepads.length; i += 1) {
       const gamepad = gamepads[i];
       if (gamepad && gamepad.pose) {
+        console.log('gamepad and pose data for pad: ', i);
         const controllerMesh = this.player.controllerMeshes[i];
         if (controllerMesh) {
           controllerMesh.position.fromArray(gamepad.pose.position);
           controllerMesh.quaternion.fromArray(gamepad.pose.orientation);
           controllerMesh.updateMatrixWorld();
         }
+      } else {
+        console.log('no gamepad or pose data for pad: ', i);
       }
     }
   }
 
-  update() {
-    const { gamepads } = this.props;
-    this.updateControllers(gamepads);
-  }
-
   render() {
-    this.update();
+    const { gamepads } = this.props;
+
+    this.updateControllers(gamepads);
 
     return null;
   }
