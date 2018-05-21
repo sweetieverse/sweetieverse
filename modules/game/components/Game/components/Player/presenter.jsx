@@ -12,8 +12,6 @@ class Player extends React.Component {
   }
 
   initScene() {
-    if (!this.player.scene) return;
-
     const me = this;
     const controllerMeshLoader = new THREE.OBJLoader();
 

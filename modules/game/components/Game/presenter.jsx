@@ -233,51 +233,55 @@ class Game extends React.Component {
     }
   }
 
-  updateGamepads() {
-    const { updateGamepads, updateDbGamepads } = this.props;
-
-    let gamepads;
-
+  getGamepadData() {
+    const result = {gamepads: [null, null], pressed: false};
     if (navigator && navigator.getGamepads) {
-      const gp = [];
-      let pressed = false;
-      gamepads = navigator.getGamepads();
+      const gamepads = navigator.getGamepads();
 
       for (let i = 0; i < gamepads.length; i += 1) {
         const pad = gamepads[i];
         if (pad) {
-          if (pad.pose) {
-            gp.push({
-              pose: pad.pose,
-              hand: pad.hand,
-              index: pad.index,
-              buttons: pad.buttons,
-              axes: pad.axes,
-              gesture: pad.gesture,
-              connected: pad.connected,
-            });
-          }
-          if (pad.buttons) {
-            for (let j = 0; j < pad.buttons.length; j += 1) {
-              const button = pad.buttons[j];
-              if (button.pressed) {
-                pressed = true;
-                break;
-              }
+          result.gamepads[i] = {
+            pose: pad.pose,
+            hand: pad.hand,
+            index: pad.index,
+            buttons: pad.buttons,
+            axes: pad.axes,
+            gesture: pad.gesture,
+            connected: pad.connected,
+          };
+          for (let j = 0; j < pad.buttons.length; j += 1) {
+            const button = pad.buttons[j];
+            if (button.pressed) {
+              result.pressed = true;
+              break;
             }
           }
         }
       }
+    }
+    return result;
+  }
 
-      if (!this.throttler) {
-        this.throttler = throttle(() => {
-          console.log('updating gamepads in firebase??', gp);
-          updateDbGamepads(gp);
-        }, 500);
-      }
-      this.throttler();
+  hasGamepadData() {
+    const { gamepads, pressed } = this.getGamepadData();
+    return (gamepads[0] || gamepads[1]);
+  }
 
-      updateGamepads(gp, pressed);
+  updateGamepads() {
+    if (!this.throttler) {
+      this.throttler = throttle(() => {
+        if (this.hasGamepadData()) {
+          const {gamepads, pressed} = this.getGamepadData();
+          this.props.updateDbGamepads(gamepads);
+        }
+      }, 500);
+    }
+    this.throttler();
+
+    if (this.hasGamepadData()) {
+      const {gamepads: gp, pressed} = this.getGamepadData();
+      this.props.updateGamepads(gp, pressed);
     }
   }
 
