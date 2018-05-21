@@ -41,24 +41,16 @@ class Player extends React.Component {
   }
 
   updateControllers(gamepads) {
-    if (!gamepads) return;
-
-    /* eslint-disable */
-    function logGamepads() {
-      console.log(util.inspect(gamepads, {showHidden: false, depth: null}));
-    }
-    /* eslint-enable */
-    if (!this.throttler) this.throttler = throttle(logGamepads, 1000);
-    this.throttler();
-
-    for (let i = 0; i < gamepads.length; i += 1) {
-      const gamepad = gamepads[i];
-      if (gamepad && gamepad.pose) {
-        const controllerMesh = this.player.controllerMeshes[i];
-        if (controllerMesh) {
-          controllerMesh.position.fromArray(gamepad.pose.position);
-          controllerMesh.quaternion.fromArray(gamepad.pose.orientation);
-          controllerMesh.updateMatrixWorld();
+    if (gamepads) {
+      for (let i = 0; i < gamepads.length; i += 1) {
+        const gamepad = gamepads[i];
+        if (gamepad && gamepad.pose) {
+          const controllerMesh = this.player.controllerMeshes[i];
+          if (controllerMesh) {
+            controllerMesh.position.fromArray(gamepad.pose.position);
+            controllerMesh.quaternion.fromArray(gamepad.pose.orientation);
+            controllerMesh.updateMatrixWorld();
+          }
         }
       }
     }

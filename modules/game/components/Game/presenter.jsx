@@ -275,7 +275,7 @@ class Game extends React.Component {
           const {gamepads, pressed} = this.getGamepadData();
           this.props.updateDbGamepads(gamepads);
         }
-      }, 500);
+      }, 100);
     }
     this.throttler();
 

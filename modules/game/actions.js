@@ -11,7 +11,7 @@ export function setUser(id, data) {
 }
 
 export function updateUserGamepads(id, gamepads) {
-  console.log(id, gamepads);
+  //console.log(id, gamepads);
   return {
     type: constants.UPDATE_USER_GAMEPADS,
     payload: {
