@@ -33,6 +33,7 @@ class Game extends React.Component {
     super(props);
     this.state = {
       players: [],
+      scene: false,
     };
     this.camera = null;
     this.fov = null;
@@ -118,6 +119,7 @@ class Game extends React.Component {
     this.scene.add(this.group);
     this.scene.add(this.camera);
     this.scene.add(this.pointLight);
+    this.setState({ scene: true });
   }
 
   initLight() {
@@ -312,7 +314,7 @@ class Game extends React.Component {
 
   render() {
     const { gamepads, players, user } = this.props;
-    const { players: playerIds } = this.state;
+    const { players: playerIds, scene } = this.state;
 
     const gamePlayers = playerIds.map(id => new PlayerObject(
       this.scene,
@@ -331,14 +333,20 @@ class Game extends React.Component {
     return (
       <div className={styles.game}>
         <canvas ref={this.setCanvasRef} width={canvasWidth} height={canvasHeight} />
-        {/* {gamePlayers.map((player, idx) => ( */}
-          {/* <Player */}
-            {/* key={`game-player-${idx}`} */}
-            {/* player={player} */}
-            {/* scene={this.scene} */}
-            {/* gamepads={player.gamepads} /> */}
-        {/* ))} */}
-        <Player player={userPlayer} scene={this.scene} gamepads={gamepads} />
+        {
+          scene &&
+          gamePlayers.map((player, idx) => (
+            <Player
+              key={`game-player-${idx}`}
+              player={player}
+              scene={this.scene}
+              gamepads={player.gamepads} />
+          ))
+        }
+        {
+          scene &&
+          <Player player={userPlayer} scene={this.scene} gamepads={gamepads} />
+        }
       </div>
     );
   }
