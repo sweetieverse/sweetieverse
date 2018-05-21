@@ -1,8 +1,14 @@
 import * as constants from './constants';
 
-// export function setUser() {
-//
-// }
+export function setUser(displayName, data) {
+  return {
+    type: constants.SET_USER,
+    payload: {
+      displayName,
+      data,
+    },
+  };
+}
 
 export function updateGamepads(gamepads, buttonPressed) {
   return {

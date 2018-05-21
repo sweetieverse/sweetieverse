@@ -4,6 +4,16 @@ import { name } from './reducer';
 
 const getState = state => state[name];
 
+export const getUser = createSelector(
+  [getState],
+  state => state.user,
+);
+
+export const getUserId = createSelector(
+  [getUser],
+  user => user.id,
+);
+
 export const getGamepads = createSelector(
   [getState],
   state => state.gamepads,
