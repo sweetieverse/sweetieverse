@@ -1,7 +1,14 @@
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { getGamepads, getButtonPressed } from '../../selectors';
+import {
+  getGamepads,
+  getButtonPressed,
+  getPlayerIds,
+  getPlayers,
+  getUserId,
+  getUser,
+} from '../../selectors';
 import { updateGamepads } from '../../actions';
 
 import presenter from './presenter';
@@ -9,6 +16,10 @@ import presenter from './presenter';
 const mapStateToProps = createStructuredSelector({
   gamepads: getGamepads,
   buttonPressed: getButtonPressed,
+  players: getPlayers,
+  playerIds: getPlayerIds,
+  userId: getUserId,
+  user: getUser,
 });
 
 const mapDispatchToProps = {

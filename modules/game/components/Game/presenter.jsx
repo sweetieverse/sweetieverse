@@ -71,6 +71,19 @@ class Game extends React.Component {
     }
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.playerIds.length !== prevState.players.length) {
+      const currentPlayerIds = prevState.players.map(player => player.id);
+      const newPlayers = nextProps.playerIds.filter(id => !currentPlayerIds.includes(id));
+      const { players } = prevState;
+      return {
+        ...players,
+        players: [...players, ...newPlayers],
+      };
+    }
+    return prevState;
+  }
+
   setCanvasRef(el) {
     if (el) this.canvas = el;
     if (THREE) {
@@ -83,17 +96,8 @@ class Game extends React.Component {
       this.addImage(projectsImage);
       this.animate();
       this.initEventListeners();
-      this.initPlayers();
+      // this.initPlayers();
     }
-  }
-
-  initPlayers() {
-    const players = [];
-    const numPlayers = 2; // normally get this from this.props.players.length or something
-    for (let i = 0; i < numPlayers; i += 1) {
-      players.push(new PlayerObject(this.scene));
-    }
-    this.setState({ players });
   }
 
   startRenderer() {
@@ -303,19 +307,34 @@ class Game extends React.Component {
   }
 
   render() {
-    const { gamepads } = this.props;
-    const { players } = this.state;
+    const { gamepads, players, user } = this.props;
+    const { players: playerIds } = this.state;
+
+    const gamePlayers = playerIds.map(id => new PlayerObject(
+      this.scene,
+      id,
+      players[id].displayName,
+      players[id].gamepads,
+    ));
+
+    const userPlayer = new PlayerObject(
+      this.scene,
+      user.id,
+      user.displayName,
+      gamepads,
+    );
 
     return (
       <div className={styles.game}>
         <canvas ref={this.setCanvasRef} width={canvasWidth} height={canvasHeight} />
-        {players.map((player, idx) => (
+        {gamePlayers.map((player, idx) => (
           <Player
             key={`game-player-${idx}`}
             player={player}
             scene={this.scene}
-            gamepads={gamepads} />
+            gamepads={player.gamepads} />
         ))}
+        <Player player={userPlayer} scene={this.scene} gamepads={gamepads} />
       </div>
     );
   }

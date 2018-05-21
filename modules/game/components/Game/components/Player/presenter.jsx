@@ -64,8 +64,8 @@ class Player extends React.Component {
       const gamepad = gamepads[i];
       if (gamepad) {
         const controllerMesh = this.player.controllerMeshes[i];
-        controllerMesh.position.fromArray(gamepad.position);
-        controllerMesh.quaternion.fromArray(gamepad.orientation);
+        controllerMesh.position.fromArray(gamepad.pose.position);
+        controllerMesh.quaternion.fromArray(gamepad.pose.orientation);
         controllerMesh.updateMatrixWorld();
       }
     }
