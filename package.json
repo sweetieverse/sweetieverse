@@ -52,6 +52,7 @@
     "build:server": "babel --presets=env --plugins=babel-plugin-transform-builtin-extend,transform-runtime,transform-object-rest-spread index.js --out-file server.js",
     "build:api": "babel --presets=env --plugins=babel-plugin-transform-builtin-extend,transform-runtime,transform-object-rest-spread api --out-dir server",
     "build": "next build && npm run build:server && npm run build:api",
+    "build:static": "npm run build && next export",
     "start": "NODE_ENV=production node server.js"
   },
   "repository": {
