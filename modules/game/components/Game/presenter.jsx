@@ -285,8 +285,12 @@ class Game extends React.Component {
     return (
       <div className={styles.game}>
         <canvas ref={this.setCanvasRef} width={canvasWidth} height={canvasHeight} />
-        {players.map(player => (
-          <Player player={player} scene={this.scene} gamepads={gamepads} />
+        {players.map((player, idx) => (
+          <Player
+            key={`game-player-${idx}`}
+            player={player}
+            scene={this.scene}
+            gamepads={gamepads} />
         ))}
       </div>
     );
