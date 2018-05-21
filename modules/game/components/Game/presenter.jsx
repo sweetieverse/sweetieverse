@@ -282,10 +282,10 @@ class Game extends React.Component {
 
     for (let i = 0; i < gamepads.length; i += 1) {
       const pad = gamepads[i];
-      if (pad && pad.position && buttonPressed) {
-        const posX = pad.position[0];
-        const posY = pad.position[1];
-        const posZ = pad.position[2];
+      if (pad && pad.pose.position && buttonPressed) {
+        const posX = pad.pose.position[0];
+        const posY = pad.pose.position[1];
+        const posZ = pad.pose.position[2];
         this.group.position.x = posX;
         this.group.position.y = posY;
         this.group.posZ = posZ;
