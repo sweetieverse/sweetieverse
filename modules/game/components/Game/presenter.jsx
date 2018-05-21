@@ -273,7 +273,7 @@ class Game extends React.Component {
     this.renderer.render(this.scene, this.camera);
     this.camera.updateProjectionMatrix();
 
-    this.updateGamepads();
+    // this.updateGamepads();
 
     requestAnimationFrame(this.animate);
   }
