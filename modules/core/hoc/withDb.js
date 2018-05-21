@@ -29,7 +29,9 @@ function withDb(Component) {
 
     updateUserGamepads(gamepads) {
       const { userId } = this.props;
+      console.log('writing to firebase for id/gamepads: ', userId, gamepads);
       if (userId) this.props.updateUserGamepads(userId, gamepads);
+      else console.log('no user id passed');
     }
 
     render() {

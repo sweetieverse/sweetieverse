@@ -56,15 +56,12 @@ class Player extends React.Component {
     for (let i = 0; i < gamepads.length; i += 1) {
       const gamepad = gamepads[i];
       if (gamepad && gamepad.pose) {
-        console.log('gamepad and pose data for pad: ', i);
         const controllerMesh = this.player.controllerMeshes[i];
         if (controllerMesh) {
           controllerMesh.position.fromArray(gamepad.pose.position);
           controllerMesh.quaternion.fromArray(gamepad.pose.orientation);
           controllerMesh.updateMatrixWorld();
         }
-      } else {
-        console.log('no gamepad or pose data for pad: ', i);
       }
     }
   }

@@ -270,7 +270,10 @@ class Game extends React.Component {
       }
 
       if (!this.throttler) {
-        this.throttler = throttle(() => { updateDbGamepads(gp); }, 500);
+        this.throttler = throttle(() => {
+          console.log('updating gamepads in firebase??', gp);
+          updateDbGamepads(gp);
+        }, 500);
       }
       this.throttler();
 

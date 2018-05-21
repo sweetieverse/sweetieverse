@@ -8,6 +8,7 @@ export async function setUser(id, data) {
 
 export async function updateUserGamepads(id, gamepads) {
   if (!fb) return null;
+  console.log('in modules/game/api.js, writing: ', id, gamepads);
   const ref = fb.database().ref(`players/${id}/gamepads`);
   return ref.set(gamepads);
 }
