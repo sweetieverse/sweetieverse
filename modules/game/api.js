@@ -9,5 +9,5 @@ export async function setUser(id, data) {
 export async function updateUserGamepads(id, gamepads) {
   if (!fb) return null;
   const ref = fb.database().ref(`players/${id}/gamepads`);
-  return ref.update(gamepads);
+  return ref.set(gamepads);
 }
