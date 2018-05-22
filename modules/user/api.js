@@ -31,3 +31,11 @@ export async function getUserData(uid) {
   const ref = fb.database().ref(path);
   return ref.once('value');
 }
+
+export async function loginWithEmailAndPassword(email, password) {
+  return fb.auth().signInWithEmailAndPassword(email, password);
+}
+
+export async function signupWithEmailAndPassword(email, password) {
+  return fb.auth().createUserWithEmailAndPassword(email, password);
+}
