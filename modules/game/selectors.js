@@ -38,3 +38,13 @@ export const makeGetPlayerById = id => createSelector(
   [getPlayers],
   players => players[id],
 );
+
+export const getObjects = createSelector(
+  [getState],
+  state => state.objects,
+);
+
+export const getCube = createSelector(
+  [getObjects],
+  objects => objects.cube,
+);

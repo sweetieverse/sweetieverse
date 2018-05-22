@@ -8,6 +8,13 @@ const initialState = {
   buttonPressed: false, // button pressed on current user gamepad?
   players: {}, // all players
   playerIds: [], // all player ids
+  objects: {
+    cube: {
+      position: { x: 0, y: 0, z: 0 },
+      quaternion: { w: 0, x: 0, y: 0, z: 0 },
+      scale: { x: 0, y: 0, z: 0 },
+    },
+  },
 };
 
 export function reducer(state = initialState, action) {
@@ -40,6 +47,15 @@ export function reducer(state = initialState, action) {
           ...state.playerIds,
           action.payload.playerId,
         ],
+      };
+
+    case constants.UPDATE_GAME_OBJECT:
+      return {
+        ...state,
+        objects: {
+          ...state.objects,
+          [action.payload.object]: action.payload.data,
+        },
       };
 
     default:

@@ -14,15 +14,23 @@ function firebasePlayersChannel() {
 
     const db = fb.database();
 
-    const handle = db.ref('players').on('child_changed', (snapshot) => {
+    // const handle = db.ref('players').on('child_changed', (snapshot) => {
+    //   const val = snapshot.val();
+    //   const playerMap = parse.singlePlayerMap(val);
+    //   const playerId = parse.singlePlayerId(val);
+    //   emitter(actions.fbReceivedPlayers(playerMap, playerId));
+    // });
+
+    const objectHandle = db.ref('cube').on('value', (snapshot) => {
       const val = snapshot.val();
-      const playerMap = parse.singlePlayerMap(val);
-      const playerId = parse.singlePlayerId(val);
-      emitter(actions.fbReceivedPlayers(playerMap, playerId));
+      emitter(actions.fbReceivedObjectData('cube', val));
     });
 
     // the subscriber must return an unsubscribe function
-    return () => db.off(handle);
+    return () => {
+      // db.off(handle);
+      db.off(objectHandle);
+    };
   });
 }
 
@@ -100,6 +108,10 @@ export function* eventChannelWatch() {
         case constants.FB_RECEIVED_PLAYERS:
           yield put(actions.addPlayer(payload.playerMap, payload.playerId));
           yield delay(500);
+          break;
+
+        case constants.FB_RECEIVED_OBJECT_DATA:
+          yield put(actions.updateGameObject(payload.object, payload.data));
           break;
 
         default:

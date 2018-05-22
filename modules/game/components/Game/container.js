@@ -8,6 +8,7 @@ import {
   getPlayers,
   getUserId,
   getUser,
+  getCube,
 } from '../../selectors';
 import { updateGamepads } from '../../actions';
 
@@ -20,6 +21,7 @@ const mapStateToProps = createStructuredSelector({
   playerIds: getPlayerIds,
   userId: getUserId,
   user: getUser,
+  cube: getCube,
 });
 
 const mapDispatchToProps = {
