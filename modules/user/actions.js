@@ -34,6 +34,22 @@ export function requestFirebaseLogin() {
   };
 }
 
+export function requestQueryStringLogin(email, password) {
+  return {
+    type: constants.REQUEST_QUERY_STRING_LOGIN,
+    payload: {
+      email,
+      password,
+    },
+  };
+}
+
+export function queryStringLoginFailure() {
+  return {
+    type: constants.QUERY_STRING_LOGIN_FAILURE,
+  };
+}
+
 export function firebaseLoginSuccess(userData, isNewUser) {
   return {
     type: constants.FIREBASE_LOGIN_SUCCESS,

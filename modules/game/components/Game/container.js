@@ -10,6 +10,7 @@ import {
   getUser,
   getCube,
 } from '../../selectors';
+import { getUser as getAuthUser } from '../../../user/selectors';
 import { updateGamepads } from '../../actions';
 
 import presenter from './presenter';
@@ -22,6 +23,7 @@ const mapStateToProps = createStructuredSelector({
   userId: getUserId,
   user: getUser,
   cube: getCube,
+  authUser: getAuthUser,
 });
 
 const mapDispatchToProps = {

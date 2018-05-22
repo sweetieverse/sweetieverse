@@ -60,20 +60,6 @@ class Game extends React.Component {
     this.onDocumentKeyDown = this.onDocumentKeyDown.bind(this);
   }
 
-  componentDidMount() {
-    const { setUser } = this.props;
-    const { search } = global.window ? window.location : { search: '' };
-    const parsed = qs.parse(search);
-    if (parsed && parsed.p) {
-      const id = parsed.p;
-      const data = {
-        id,
-        displayName: id,
-      };
-      setUser(id, data);
-    }
-  }
-
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.playerIds.length !== prevState.players.length) {
       const currentPlayerIds = prevState.players.map(player => player.id);

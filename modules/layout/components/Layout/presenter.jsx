@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import qs from 'query-string';
 
 import { Header } from './components';
 import { Menu } from '../../../nav/components';
@@ -20,10 +21,18 @@ class Layout extends React.Component {
   }
 
   componentDidMount() {
+    const { requestQueryStringLogin } = this.props;
+
     if (fb) {
       this.unregisterAuthObserver = fb.auth().onAuthStateChanged((user) => {
         if (user) this.handleSignedInUser(user);
-        else this.handleNoSignedInUser();
+        else {
+          const { search } = global.window ? window.location : { search: '' };
+          const parsed = qs.parse(search);
+          if (parsed.email && parsed.password) {
+            requestQueryStringLogin(parsed.email, parsed.password);
+          }
+        }
       });
     }
   }

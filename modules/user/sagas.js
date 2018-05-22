@@ -1,8 +1,10 @@
-import { call, fork, put, take } from 'redux-saga/effects';
+import { call, fork, put, take, all } from 'redux-saga/effects';
 
 import * as actions from './actions';
 import * as api from './api';
 import * as constants from './constants';
+
+import { setUser } from '../game/actions';
 
 /**
  *  requestLogin
@@ -30,20 +32,43 @@ function* requestLogin(username, password) {
  *  @param isNewUser {boolean}
  */
 function* loginSuccess(userData, isNewUser) {
-  if (!isNewUser) yield null;
+  const saveData = {
+    ...userData,
+    displayName: userData.displayName || userData.email,
+  };
 
   try {
-    yield call(api.saveNewUser, userData);
+    yield call(api.saveNewUser, saveData);
     const result = yield call(api.getUserData, userData.uid);
     if (result && result.val) {
       const user = result.val();
-      yield put(actions.userDataRetrieved(user));
+      yield all([
+        put(actions.userDataRetrieved(user)),
+        put(setUser(user.uid, user)),
+      ]);
     } else {
       yield null;
     }
   } catch (error) {
     console.log(error, error.message);
     yield null;
+  }
+}
+
+/**
+ *  requestQueryStringLogin
+ *  @param email {object}
+ *  @param password {boolean}
+ */
+function* requestQueryStringLogin(email, password) {
+  try {
+    yield call(api.loginWithEmailAndPassword, email, password);
+  } catch (error) {
+    try {
+      yield call(api.signupWithEmailAndPassword, email, password);
+    } catch (e) {
+      yield put(actions.queryStringLoginFailure());
+    }
   }
 }
 
@@ -58,6 +83,7 @@ function* watch() {
     const { type, payload = {} } = yield take([
       constants.LOGIN_REQUEST,
       constants.FIREBASE_LOGIN_SUCCESS,
+      constants.REQUEST_QUERY_STRING_LOGIN,
     ]);
 
     switch (type) {
@@ -67,6 +93,10 @@ function* watch() {
 
       case constants.FIREBASE_LOGIN_SUCCESS:
         yield fork(loginSuccess, payload.userData, payload.isNewUser);
+        break;
+
+      case constants.REQUEST_QUERY_STRING_LOGIN:
+        yield fork(requestQueryStringLogin, payload.email, payload.password);
         break;
 
       default:
