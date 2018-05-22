@@ -11,12 +11,22 @@ export function setUser(id, data) {
 }
 
 export function updateUserGamepads(id, gamepads) {
-  //console.log(id, gamepads);
+  // console.log(id, gamepads);
   return {
     type: constants.UPDATE_USER_GAMEPADS,
     payload: {
       id,
       gamepads,
+    },
+  };
+}
+
+export function updateGameObject(object, data) {
+  return {
+    type: constants.UPDATE_GAME_OBJECT,
+    payload: {
+      object,
+      data,
     },
   };
 }
@@ -27,6 +37,26 @@ export function updateGamepads(gamepads, buttonPressed) {
     payload: {
       gamepads,
       buttonPressed,
+    },
+  };
+}
+
+export function fbReceivedObjectData(object, data) {
+  return {
+    type: constants.FB_RECEIVED_OBJECT_DATA,
+    payload: {
+      object,
+      data,
+    },
+  };
+}
+
+export function updateObjectData(object, data) {
+  return {
+    type: constants.UPDATE_OBJECT_DATA,
+    payload: {
+      object,
+      data,
     },
   };
 }

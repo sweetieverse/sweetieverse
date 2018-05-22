@@ -44,6 +44,7 @@ class Game extends React.Component {
     this.canvas = null;
     this.pointLight = null;
     this.throttler = null;
+    this.objectThrottler = null;
     this.bindCallbacks();
   }
 
@@ -275,7 +276,7 @@ class Game extends React.Component {
           const {gamepads, pressed} = this.getGamepadData();
           this.props.updateDbGamepads(gamepads);
         }
-      }, 100);
+      }, 500);
     }
     this.throttler();
 
@@ -286,6 +287,8 @@ class Game extends React.Component {
   }
 
   updateCube(gamepads, buttonPressed) {
+    const { updateDbObject } = this.props;
+
     this.group.rotation.y += (targetRotation - this.group.rotation.y) * 0.05;
     this.group.rotation.x += (targetRotationY - this.group.rotation.x) * 0.05;
 
@@ -300,6 +303,25 @@ class Game extends React.Component {
         this.group.posZ = posZ;
       }
     }
+
+    if (!this.objectThrottler) {
+      this.objectThrottler = throttle(() => {
+        const {
+          quaternion,
+          position,
+          scale,
+        } = this.group;
+
+        const cubeData = {
+          quaternion: { w: quaternion.w, x: quaternion.x, y: quaternion.y, z: quaternion.z },
+          position: { x: position.x, y: position.y, z: position.z },
+          scale: { x: scale.x, y: scale.y, z: scale.z },
+        };
+
+        updateDbObject('cube', cubeData);
+      }, 500);
+    }
+    this.objectThrottler();
   }
 
   animate() {

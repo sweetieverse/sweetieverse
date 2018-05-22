@@ -1,5 +1,5 @@
 import { call, fork, put, take, all } from 'redux-saga/effects';
-import { eventChannel } from 'redux-saga';
+import { eventChannel, delay } from 'redux-saga';
 
 import * as api from './api';
 import * as actions from './actions';
@@ -14,7 +14,7 @@ function firebasePlayersChannel() {
 
     const db = fb.database();
 
-    const handle = db.ref('players').on('child_added', (snapshot) => {
+    const handle = db.ref('players').on('child_changed', (snapshot) => {
       const val = snapshot.val();
       const playerMap = parse.singlePlayerMap(val);
       const playerId = parse.singlePlayerId(val);
@@ -44,6 +44,15 @@ function* updateUserGamepads(id, gamepads) {
   }
 }
 
+function* updateGameObject(object, data) {
+  try {
+    yield call(api.updateGameObject, object, data);
+  } catch (error) {
+    console.log(error, error.message);
+    yield null;
+  }
+}
+
 /**
  *  Generator function to listen for redux actions
  *
@@ -55,6 +64,7 @@ function* watch() {
     const { type, payload = {} } = yield take([
       constants.SET_USER,
       constants.UPDATE_USER_GAMEPADS,
+      constants.UPDATE_GAME_OBJECT,
     ]);
 
     switch (type) {
@@ -64,6 +74,10 @@ function* watch() {
 
       case constants.UPDATE_USER_GAMEPADS:
         yield fork(updateUserGamepads, payload.id, payload.gamepads);
+        break;
+
+      case constants.UPDATE_GAME_OBJECT:
+        yield fork(updateGameObject, payload.object, payload.data);
         break;
 
       default:
@@ -85,6 +99,7 @@ export function* eventChannelWatch() {
       switch (type) {
         case constants.FB_RECEIVED_PLAYERS:
           yield put(actions.addPlayer(payload.playerMap, payload.playerId));
+          yield delay(500);
           break;
 
         default:
