@@ -1,8 +1,10 @@
-import { call, fork, put, take } from 'redux-saga/effects';
+import { call, fork, put, take, all } from 'redux-saga/effects';
 
 import * as actions from './actions';
 import * as api from './api';
 import * as constants from './constants';
+
+import { setUser } from '../game/actions';
 
 /**
  *  requestLogin
@@ -30,8 +32,6 @@ function* requestLogin(username, password) {
  *  @param isNewUser {boolean}
  */
 function* loginSuccess(userData, isNewUser) {
-  if (!isNewUser) yield null;
-
   const saveData = {
     ...userData,
     displayName: userData.displayName || userData.email,
@@ -42,7 +42,10 @@ function* loginSuccess(userData, isNewUser) {
     const result = yield call(api.getUserData, userData.uid);
     if (result && result.val) {
       const user = result.val();
-      yield put(actions.userDataRetrieved(user));
+      yield all([
+        put(actions.userDataRetrieved(user)),
+        put(setUser(user.uid, user)),
+      ]);
     } else {
       yield null;
     }

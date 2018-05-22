@@ -24,7 +24,6 @@ export function reducer(state = initialState, action) {
         ...state,
         user: {
           ...action.payload.data,
-          id: action.payload.id,
         },
       };
 
