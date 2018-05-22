@@ -63,7 +63,7 @@ class Layout extends React.Component {
         } else {
           renderChildren = (
             <Link href="/login">
-              <a>Login</a>
+              <a className={styles.loginLink}>Login</a>
             </Link>
           );
         }
