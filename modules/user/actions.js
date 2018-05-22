@@ -28,13 +28,9 @@ export function loginFailure(message) {
   };
 }
 
-export function requestFirebaseLogin(username, password) {
+export function requestFirebaseLogin() {
   return {
     type: constants.FIREBASE_LOGIN_REQUEST,
-    payload: {
-      username,
-      password,
-    },
   };
 }
 

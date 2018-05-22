@@ -18,6 +18,11 @@ export const GameRoute = {
   RES_PATH: '/game',
 };
 
+export const LoginRoute = {
+  REQ_PATH: '/login',
+  RES_PATH: '/login',
+};
+
 export const HomeRoute = {
   REQ_PATH: '/',
   RES_PATH: '/',

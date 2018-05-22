@@ -16,6 +16,7 @@ const {
   StoreParamRoute,
   HomeRoute,
   GameRoute,
+  LoginRoute,
 } = require('./serverConstants');
 
 // init function for an instance of express

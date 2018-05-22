@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Layout } from '../modules/layout/components';
 import { UserAuth } from '../modules/user/components';
-import withAuthHook from '../modules/core/hoc/withAuthHook';
+import { withAuthHook } from '../modules/core/hoc';
 
 const UserAuthWithHook = withAuthHook(UserAuth);
 
