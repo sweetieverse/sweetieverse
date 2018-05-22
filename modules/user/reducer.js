@@ -5,7 +5,7 @@ export const name = 'user';
 const initialState = {
   user: {},
   isAuthenticated: false,
-  isFetching: false,
+  isFetching: true,
 };
 
 export function reducer(state = initialState, action) {

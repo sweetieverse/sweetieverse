@@ -52,7 +52,7 @@ function withAuthHook(Component) {
         },
         // Opens IDP Providers sign-in flow in a popup.
         signInFlow: 'popup',
-        // signInSuccessUrl: '/',
+        signInSuccessUrl: '/user',
         signInOptions: [
           {
             provider: fb.auth.GoogleAuthProvider.PROVIDER_ID,

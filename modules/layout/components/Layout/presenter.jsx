@@ -1,8 +1,10 @@
 import React from 'react';
+import Link from 'next/link';
 
 import { Header } from './components';
 import { Menu } from '../../../nav/components';
 
+import { propTypes, defaultProps } from './props';
 import styles from './styles.css';
 
 import { ConfigConsumer } from '../../../context';
@@ -13,12 +15,15 @@ class Layout extends React.Component {
   constructor(props) {
     super(props);
     this.unregisterAuthObserver = null;
+    this.handleSignedInUser = this.handleSignedInUser.bind(this);
+    this.handleNoSignedInUser = this.handleNoSignedInUser.bind(this);
   }
 
   componentDidMount() {
     if (fb) {
       this.unregisterAuthObserver = fb.auth().onAuthStateChanged((user) => {
-        this.handleSignedInUser(user);
+        if (user) this.handleSignedInUser(user);
+        else this.handleNoSignedInUser();
       });
     }
   }
@@ -28,9 +33,14 @@ class Layout extends React.Component {
   }
 
   handleSignedInUser(user) {
-    const { firebaseLoginSuccess: loginSuccess } = this.props;
+    const { firebaseLoginSuccess } = this.props;
     const { uid, email, displayName } = user;
-    loginSuccess({ uid, email, displayName });
+    firebaseLoginSuccess({ uid, email, displayName });
+  }
+
+  handleNoSignedInUser() {
+    const { firebaseLoginFailure } = this.props;
+    firebaseLoginFailure();
   }
 
   render() {
@@ -38,7 +48,27 @@ class Layout extends React.Component {
       toggleMenu,
       menuOpen,
       children,
+      isAuthenticated,
+      isFetching,
+      authenticatedLayout,
     } = this.props;
+
+    console.log(authenticatedLayout);
+    let renderChildren = children;
+
+    if (authenticatedLayout) {
+      if (!isAuthenticated) {
+        if (isFetching) {
+          renderChildren = <div />;
+        } else {
+          renderChildren = (
+            <Link href="/login">
+              <a>Login</a>
+            </Link>
+          );
+        }
+      }
+    }
 
     return (
       <ConfigConsumer>
@@ -57,7 +87,7 @@ class Layout extends React.Component {
               toggleMenu={toggleMenu} />
 
             <div className={styles.layout}>
-              {children}
+              {renderChildren}
             </div>
           </React.Fragment>
         )}
@@ -65,5 +95,8 @@ class Layout extends React.Component {
     );
   }
 }
+
+Layout.propTypes = propTypes;
+Layout.defaultProps = defaultProps;
 
 export default Layout;

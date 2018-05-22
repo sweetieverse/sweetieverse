@@ -14,7 +14,7 @@ export default class Index extends React.Component {
   render() {
     return (
       <ConfigProvider value={{ ...this.props }}>
-        <Layout>
+        <Layout authenticatedLayout={false}>
         </Layout>
       </ConfigProvider>
     );
