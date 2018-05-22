@@ -40,7 +40,6 @@ export function reducer(state = initialState, action) {
     case constants.FIREBASE_LOGIN_SUCCESS:
       return {
         ...state,
-        user: action.payload.userData,
         isFetching: false,
         isAuthenticated: true,
       };
@@ -49,6 +48,12 @@ export function reducer(state = initialState, action) {
       return {
         ...state,
         isFetching: false,
+      };
+
+    case constants.USER_DATA_RETRIEVED:
+      return {
+        ...state,
+        user: action.payload.user,
       };
 
     default:

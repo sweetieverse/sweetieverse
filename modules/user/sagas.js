@@ -25,6 +25,29 @@ function* requestLogin(username, password) {
 }
 
 /**
+ *  loginSuccess
+ *  @param userData {object}
+ *  @param isNewUser {boolean}
+ */
+function* loginSuccess(userData, isNewUser) {
+  if (!isNewUser) yield null;
+
+  try {
+    yield call(api.saveNewUser, userData);
+    const result = yield call(api.getUserData, userData.uid);
+    if (result && result.val) {
+      const user = result.val();
+      yield put(actions.userDataRetrieved(user));
+    } else {
+      yield null;
+    }
+  } catch (error) {
+    console.log(error, error.message);
+    yield null;
+  }
+}
+
+/**
  *  Generator function to listen for redux actions
  *
  *  Handles any action api requests as non-blocking calls and
@@ -34,11 +57,16 @@ function* watch() {
   while (true) {
     const { type, payload = {} } = yield take([
       constants.LOGIN_REQUEST,
+      constants.FIREBASE_LOGIN_SUCCESS,
     ]);
 
     switch (type) {
       case constants.LOGIN_REQUEST:
         yield fork(requestLogin, payload.username, payload.password);
+        break;
+
+      case constants.FIREBASE_LOGIN_SUCCESS:
+        yield fork(loginSuccess, payload.userData, payload.isNewUser);
         break;
 
       default:

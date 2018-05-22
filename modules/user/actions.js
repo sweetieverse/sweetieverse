@@ -34,11 +34,12 @@ export function requestFirebaseLogin() {
   };
 }
 
-export function firebaseLoginSuccess(userData) {
+export function firebaseLoginSuccess(userData, isNewUser) {
   return {
     type: constants.FIREBASE_LOGIN_SUCCESS,
     payload: {
       userData,
+      isNewUser,
     },
   };
 }
@@ -48,6 +49,15 @@ export function firebaseLoginFailure(message) {
     type: constants.FIREBASE_LOGIN_FAILURE,
     payload: {
       message,
+    },
+  };
+}
+
+export function userDataRetrieved(user) {
+  return {
+    type: constants.USER_DATA_RETRIEVED,
+    payload: {
+      user,
     },
   };
 }

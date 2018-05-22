@@ -67,10 +67,10 @@ function withAuthHook(Component) {
       };
     }
 
-    handleSignedInUser(user) {
+    handleSignedInUser(user, isNewUser) {
       const { firebaseLoginSuccess: loginSuccess } = this.props;
       const { uid, email, displayName } = user;
-      loginSuccess({ uid, email, displayName });
+      loginSuccess({ uid, email, displayName }, isNewUser);
     }
 
     triggerUIFlow() {
