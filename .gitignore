@@ -59,6 +59,8 @@ typings/
 
 # next.js build output
 .next
+server.js
+server/
 
 # xml refs folder
 ref/*.xml

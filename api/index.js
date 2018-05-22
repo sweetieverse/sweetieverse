@@ -50,6 +50,11 @@ module.exports = () => {
     redirect: false,
   }));
 
+  // sere css
+  app.use(express.static(path.join(__dirname, '../assets/css'), {
+    redirect: false,
+  }));
+
   // serve static files (html, js, css, images, etc)
   app.use(express.static(path.join(__dirname, '../assets'), {
     redirect: false,

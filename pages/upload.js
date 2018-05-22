@@ -60,12 +60,15 @@ export default class Uploader extends React.Component {
     const options = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `bearer ${this.state.auth.token}`,
       },
     };
+
     const response = await axios.post('https://registry.webmr.io/l', {
       email: this.state.email,
       password: this.state.password,
     }, options);
+
     const { data: { id, email, token } } = response;
     this.setState({
       auth: {
