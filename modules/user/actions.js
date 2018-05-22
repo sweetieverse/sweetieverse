@@ -38,7 +38,7 @@ export function requestFirebaseLogin(username, password) {
   };
 }
 
-export function FirebaseLoginSuccess(userData) {
+export function firebaseLoginSuccess(userData) {
   return {
     type: constants.FIREBASE_LOGIN_SUCCESS,
     payload: {
@@ -47,7 +47,7 @@ export function FirebaseLoginSuccess(userData) {
   };
 }
 
-export function FirebaseLoginFailure(message) {
+export function firebaseLoginFailure(message) {
   return {
     type: constants.FIREBASE_LOGIN_FAILURE,
     payload: {

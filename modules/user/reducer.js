@@ -42,6 +42,7 @@ export function reducer(state = initialState, action) {
         ...state,
         user: action.payload.userData,
         isFetching: false,
+        isAuthenticated: true,
       };
 
     case constants.FIREBASE_LOGIN_FAILURE:
