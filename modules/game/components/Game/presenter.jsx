@@ -289,6 +289,25 @@ class Game extends React.Component {
     }
   }
 
+  sendCubeUpdate() {
+    const { updateDbObject } = this.props;
+    if (updateDbObject) {
+      const {
+        quaternion,
+        position,
+        scale,
+      } = this.group;
+
+      const cubeData = {
+        quaternion: { w: quaternion.w, x: quaternion.x, y: quaternion.y, z: quaternion.z },
+        position: { x: position.x, y: position.y, z: position.z },
+        scale: { x: scale.x, y: scale.y, z: scale.z },
+      };
+
+      updateDbObject('cube', cubeData);
+    }
+  }
+
   updateCube(gamepads, buttonPressed) {
     const { updateDbObject, cube } = this.props;
     const { mouseDown } = this.state;
@@ -302,31 +321,14 @@ class Game extends React.Component {
         this.group.position.x = posX;
         this.group.position.y = posY;
         this.group.posZ = posZ;
+        this.sendCubeUpdate();
       }
     }
-
-    if (!this.objectThrottler) {
-      this.objectThrottler = throttle(() => {
-        const {
-          quaternion,
-          position,
-          scale,
-        } = this.group;
-
-        const cubeData = {
-          quaternion: { w: quaternion.w, x: quaternion.x, y: quaternion.y, z: quaternion.z },
-          position: { x: position.x, y: position.y, z: position.z },
-          scale: { x: scale.x, y: scale.y, z: scale.z },
-        };
-
-        updateDbObject('cube', cubeData);
-      }, 1000 / 40);
-    }
-    this.objectThrottler();
 
     if (mouseDown) {
       this.group.rotation.y += (targetRotation - this.group.rotation.y) * 0.05;
       this.group.rotation.x += (targetRotationY - this.group.rotation.x) * 0.05;
+      this.sendCubeUpdate();
     } else {
       this.group.position.x = cube.position.x;
       this.group.position.y = cube.position.y;
