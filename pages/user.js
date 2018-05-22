@@ -1,19 +1,23 @@
-import * as React from 'react';
+import React from 'react';
 
 import { Layout } from '../modules/layout/components';
-import { UserAuth } from '../modules/user/components';
-import withAuthHook from '../modules/core/hoc/withAuthHook';
+import { MyProfile } from '../modules/user/components';
 
-const UserAuthWithHook = withAuthHook(UserAuth);
+import { ConfigProvider } from '../modules/context';
 
-class User extends React.Component {
+export default class User extends React.Component {
+  static getInitialProps(context) {
+    const json = JSON.parse(JSON.stringify(context.query));
+    return json;
+  }
+
   render() {
     return (
-      <Layout>
-        <UserAuthWithHook />
-      </Layout>
+      <ConfigProvider value={this.props}>
+        <Layout>
+          <MyProfile />
+        </Layout>
+      </ConfigProvider>
     );
   }
 }
-
-export default User;

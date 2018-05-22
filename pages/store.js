@@ -18,7 +18,7 @@ export default class Store extends React.Component {
 
     return (
       <ConfigProvider value={this.props}>
-        <Layout>
+        <Layout authenticatedLayout={false}>
         </Layout>
       </ConfigProvider>
     );

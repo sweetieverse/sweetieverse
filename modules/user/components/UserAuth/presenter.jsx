@@ -20,16 +20,6 @@ class UserAuth extends React.Component {
     const { user } = this.state;
   }
 
-  handleGoogleFlow() {
-    const { triggerGoogleFlow } = this.props;
-    if (triggerGoogleFlow) triggerGoogleFlow();
-  }
-
-  handleFacebookFlow() {
-    const { triggerFacebookFlow } = this.props;
-    if (triggerFacebookFlow) triggerFacebookFlow();
-  }
-
   handleUIFlow(el) {
     const { triggerUIFlow } = this.props;
     if (triggerUIFlow) triggerUIFlow();
@@ -38,9 +28,8 @@ class UserAuth extends React.Component {
   render() {
     return (
       <div className={styles.profile}>
+        <h4 className={styles.authHeader}>Sweetiestore Login</h4>
         <div ref={this.handleUIFlow.bind(this)} id="firebaseui-container" />
-        {/* <button onClick={this.handleGoogleFlow.bind(this)}>Google Sign-In</button> */}
-        {/* <button onClick={this.handleGoogleFlow.bind(this)}>Google Sign-In</button> */}
       </div>
     );
   }

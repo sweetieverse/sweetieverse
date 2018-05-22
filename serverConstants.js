@@ -13,6 +13,16 @@ export const StoreParamRoute = {
   RES_PATH: '/store',
 };
 
+export const GameRoute = {
+  REQ_PATH: '/game',
+  RES_PATH: '/game',
+};
+
+export const LoginRoute = {
+  REQ_PATH: '/login',
+  RES_PATH: '/login',
+};
+
 export const HomeRoute = {
   REQ_PATH: '/',
   RES_PATH: '/',

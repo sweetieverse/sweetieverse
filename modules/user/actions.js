@@ -28,30 +28,36 @@ export function loginFailure(message) {
   };
 }
 
-export function requestFirebaseLogin(username, password) {
+export function requestFirebaseLogin() {
   return {
     type: constants.FIREBASE_LOGIN_REQUEST,
-    payload: {
-      username,
-      password,
-    },
   };
 }
 
-export function FirebaseLoginSuccess(userData) {
+export function firebaseLoginSuccess(userData, isNewUser) {
   return {
     type: constants.FIREBASE_LOGIN_SUCCESS,
     payload: {
       userData,
+      isNewUser,
     },
   };
 }
 
-export function FirebaseLoginFailure(message) {
+export function firebaseLoginFailure(message) {
   return {
     type: constants.FIREBASE_LOGIN_FAILURE,
     payload: {
       message,
+    },
+  };
+}
+
+export function userDataRetrieved(user) {
+  return {
+    type: constants.USER_DATA_RETRIEVED,
+    payload: {
+      user,
     },
   };
 }

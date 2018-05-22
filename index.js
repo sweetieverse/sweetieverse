@@ -15,6 +15,8 @@ const {
   ProductParamRoute,
   StoreParamRoute,
   HomeRoute,
+  GameRoute,
+  LoginRoute,
 } = require('./serverConstants');
 
 // init function for an instance of express
@@ -102,6 +104,28 @@ app.prepare()
 
       return app.render(req, res, StoreParamRoute.RES_PATH, queryParams);
     });
+
+    // server.get(GameRoute.REQ_PATH, async (req, res) => {
+    //   const { productName, storeName } = req.params;
+    //   const reqPath = `/s/${storeName}/${productName}`;
+    //   const pkgName = `${storeName}-${productName}`;
+    //
+    //   let queryParams = {};
+    //   try {
+    //     const pkgData = await packageJson(pkgName, {
+    //       fullMetadata: true,
+    //     });
+    //     queryParams = {
+    //       ...pkgData.sweetieverse,
+    //       identifier: pkgData.name,
+    //       slug: reqPath,
+    //     };
+    //   } catch (e) {
+    //     console.log(e); // todo: log this to loggly, etc
+    //   }
+    //
+    //   return app.render(req, res, GameRoute.RES_PATH, queryParams);
+    // });
 
     server.get('*', (req, res) => handle(req, res));
 

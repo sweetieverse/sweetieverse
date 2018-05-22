@@ -1,3 +1,11 @@
 .layout {
     padding: 104px 0 0;
 }
+
+.loginLink {
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    display: block;
+    margin-top: 16px;
+}

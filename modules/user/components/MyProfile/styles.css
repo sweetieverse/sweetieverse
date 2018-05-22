@@ -2,3 +2,21 @@
     width: 100%;
     padding: 30px;
 }
+
+.greeting {
+    color: #fff;
+    margin-bottom: 24px;
+}
+
+.label {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #eee;
+    margin-bottom: 8px;
+    display: inline-block;
+}
+
+.value {
+    font-size: 16px;
+    color: #fff;
+}

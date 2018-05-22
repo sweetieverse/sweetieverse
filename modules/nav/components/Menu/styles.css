@@ -5,6 +5,7 @@
     left: -100vw;
     display: none;
     cursor: pointer;
+    z-index: 10000;
 }
 
 .underlay.open {
@@ -13,6 +14,7 @@
 }
 
 .menu {
+    z-index: 10001;
     position: fixed;
     width: 240px;
     left: -245px;

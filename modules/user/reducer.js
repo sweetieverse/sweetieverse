@@ -5,7 +5,7 @@ export const name = 'user';
 const initialState = {
   user: {},
   isAuthenticated: false,
-  isFetching: false,
+  isFetching: true,
 };
 
 export function reducer(state = initialState, action) {
@@ -40,14 +40,20 @@ export function reducer(state = initialState, action) {
     case constants.FIREBASE_LOGIN_SUCCESS:
       return {
         ...state,
-        user: action.payload.userData,
         isFetching: false,
+        isAuthenticated: true,
       };
 
     case constants.FIREBASE_LOGIN_FAILURE:
       return {
         ...state,
         isFetching: false,
+      };
+
+    case constants.USER_DATA_RETRIEVED:
+      return {
+        ...state,
+        user: action.payload.user,
       };
 
     default:

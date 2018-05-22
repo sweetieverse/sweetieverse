@@ -8,9 +8,6 @@ import { UploadImage } from './components';
 class MyProfile extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      user: null,
-    };
     this.bindCallbacks();
   }
 
@@ -23,10 +20,17 @@ class MyProfile extends React.Component {
   }
 
   render() {
+    const { user } = this.props;
+
     return (
       <div className={styles.profile}>
-        Welcome back!
-        <UploadImage />
+        <p className={styles.greeting}>
+          Welcome back, {user ? user.displayName : 'sign in'}!
+        </p>
+        <div>
+          <label className={styles.label}>Email Address</label>
+          <p className={styles.value}>{user ? user.email : ''}</p>
+        </div>
       </div>
     );
   }
