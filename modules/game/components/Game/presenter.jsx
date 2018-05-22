@@ -302,27 +302,27 @@ class Game extends React.Component {
         this.group.position.x = posX;
         this.group.position.y = posY;
         this.group.posZ = posZ;
-
-        if (!this.objectThrottler) {
-          this.objectThrottler = throttle(() => {
-            const {
-              quaternion,
-              position,
-              scale,
-            } = this.group;
-
-            const cubeData = {
-              quaternion: { w: quaternion.w, x: quaternion.x, y: quaternion.y, z: quaternion.z },
-              position: { x: position.x, y: position.y, z: position.z },
-              scale: { x: scale.x, y: scale.y, z: scale.z },
-            };
-
-            updateDbObject('cube', cubeData);
-          }, 500);
-        }
-        this.objectThrottler();
       }
     }
+
+    if (!this.objectThrottler) {
+      this.objectThrottler = throttle(() => {
+        const {
+          quaternion,
+          position,
+          scale,
+        } = this.group;
+
+        const cubeData = {
+          quaternion: { w: quaternion.w, x: quaternion.x, y: quaternion.y, z: quaternion.z },
+          position: { x: position.x, y: position.y, z: position.z },
+          scale: { x: scale.x, y: scale.y, z: scale.z },
+        };
+
+        updateDbObject('cube', cubeData);
+      }, 1000 / 40);
+    }
+    this.objectThrottler();
 
     if (mouseDown) {
       this.group.rotation.y += (targetRotation - this.group.rotation.y) * 0.05;
